@@ -214,6 +214,10 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
   justify-content: center;
   padding: 24px;
 }
+
+.percorso-card { cursor:pointer; }
+.percorso-card .material-action-btn { cursor:pointer; pointer-events:auto; }
+
 .modal-box {
   position: relative;
   z-index: 10000;
@@ -1178,7 +1182,7 @@ function renderPercorsi(){
         </div>
       </div>
       <div style="margin-top:1rem;text-align:right;">
-        <button class="material-action-btn" onclick="event.stopPropagation(); openQuadernoDetail(${p.id})">Apri quaderno</button>
+        <button type="button" class="material-action-btn quaderno-open-btn" data-qid="${p.id}" onclick="event.stopPropagation(); openQuadernoDetail(${p.id})">Apri quaderno</button>
       </div>
     </div>`;
   }).join('') : '<p style="color:var(--color-text-tertiary);font-size:13px;font-family:var(--font-sans);">Nessun quaderno ancora.</p>';
@@ -1251,7 +1255,7 @@ function openQuadernoDetail(id){
     if(typeof renderReferenceBox === 'function') renderReferenceBox(nuclei[0] || q.titolo, 'quaderno-reference-preview');
   }catch(err){
     console.error('Errore apertura quaderno', err);
-    alert('C’è un problema nell’apertura del quaderno. Ho preparato una versione più robusta.');
+    document.getElementById('modal-root').innerHTML = `<div class="modal-backdrop" onclick="handleBackdropClick(event)"><div class="modal-box"><h2>Quaderno</h2><div class="modal-sub">Si è verificato un problema nel rendering completo. Sto aprendo una vista essenziale.</div><div class="const-related-list">${(notesForQuaderno(id)||[]).slice(0,5).map(n=>`<div class="const-related-item" onclick="openMaterialDetail(${n.id})"><div class="const-related-type">nota</div><div class="const-related-title">${n.titolo}</div></div>`).join('') || '<div class="const-micro">Nessuna nota ancora.</div>'}</div><div class="material-action-row"><button class="material-action-btn" onclick="closeModal()">Chiudi</button></div></div></div>`; document.body.classList.add('modal-open');
   }
 }
 
@@ -1390,6 +1394,23 @@ function salvaImpostazioni(){
   document.getElementById('imp-msg').textContent='✓ Salvata. Il compagno è attivo.';
   setTimeout(closeModal,1200);
 }
+
+
+document.addEventListener('click', function(ev){
+  const btn = ev.target.closest('.quaderno-open-btn');
+  if(btn){
+    ev.preventDefault();
+    ev.stopPropagation();
+    const qid = btn.getAttribute('data-qid');
+    if(qid) openQuadernoDetail(qid);
+    return;
+  }
+  const card = ev.target.closest('.percorso-card[data-qid]');
+  if(card && !ev.target.closest('.archivio-nucleus-chip') && !ev.target.closest('.material-action-btn')){
+    const qid = card.getAttribute('data-qid');
+    if(qid) openQuadernoDetail(qid);
+  }
+});
 
 // ── INIT ──────────────────────────────────────────────
 db.auth.getSession().then(({data})=>{if(data.session?.user)initApp(data.session.user);});
