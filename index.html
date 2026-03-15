@@ -1135,6 +1135,13 @@ function quadernoNuclei(q){
   mats.forEach(m=>splitNuclei(m.nuclei).forEach(n=>counts[n]=(counts[n]||0)+1));
   return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);
 }
+
+function quadernoIdForMaterial(item){
+  const content = item?.contenuto || '';
+  const m = content.match(/\[\[Q:([^\]]*)\]\]/);
+  return m ? m[1] : '';
+}
+
 function relatedSourcesCount(q){
   return relatedMaterialsForQuaderno(q).filter(m=>!!(m.url || m.file_path)).length;
 }
