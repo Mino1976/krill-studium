@@ -1128,7 +1128,6 @@ function relatedMaterialsForQuaderno(q){
     const inferred = mn.some(n=>qWords.includes(n)) || qWords.some(n=>(m.titolo||'').toLowerCase().includes(n));
     return explicit || inferred;
   });
-});
 }
 function quadernoNuclei(q){
   const mats = relatedMaterialsForQuaderno(q);
