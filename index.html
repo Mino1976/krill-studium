@@ -483,12 +483,12 @@ const FALLBACK={'Cartografo':'I materiali che stai raccogliendo tracciano una ma
 
 // Messaggi di benvenuto per utente nuovo — scritti a mano, tono Krill
 const BENVENUTO_NUOVO = {
-  'Cartografo': 'Benvenuto nello Studium. Questo è il tuo scrittoio: uno spazio per sviluppare una ricerca nel tempo, non per archiviare in fretta. Inizia da dove sei — un'intuizione, un titolo, una domanda. Il compagno ti aiuterà a tracciare la mappa.',
-  'Editor': 'Sei arrivato in uno spazio di lavoro, non di esposizione. Qui la forma viene dopo. Prima vengono i materiali, i nuclei, le domande senza risposta. Comincia con quello che hai già in mente.',
-  'Critico': 'Ogni ricerca ha un punto cieco. Questo spazio serve anche a trovarlo. Inizia con un quaderno — anche vago, anche provvisorio. La chiarezza arriverà mentre accumuli.',
-  'Custode': 'Questo spazio è fatto per non dimenticare. I materiali che carichi, i nuclei che emergono, le note che scrivi: tutto resta, tutto può essere ritrovato. Comincia con qualcosa che vuoi non perdere.',
-  'Compagno di bottega': 'Benvenuto. Questo è uno spazio per lavorare, non per capire tutto subito. Basta cominciare — un quaderno, un materiale, una parola. Il resto viene da sé.',
-  'Provocatore': 'Uno studio è sempre anche un luogo di crisi. Porta qui le tue domande più difficili, quelle che non sai ancora come formulare. L'atlante comincerà a mostrarle.'
+  'Cartografo': "Benvenuto nello Studium. Questo è il tuo scrittoio: uno spazio per sviluppare una ricerca nel tempo, non per archiviare in fretta. Inizia da dove sei — un'intuizione, un titolo, una domanda. Il compagno ti aiuterà a tracciare la mappa.",
+  'Editor': "Sei arrivato in uno spazio di lavoro, non di esposizione. Qui la forma viene dopo. Prima vengono i materiali, i nuclei, le domande senza risposta. Comincia con quello che hai già in mente.",
+  'Critico': "Ogni ricerca ha un punto cieco. Questo spazio serve anche a trovarlo. Inizia con un quaderno — anche vago, anche provvisorio. La chiarezza arriverà mentre accumuli.",
+  'Custode': "Questo spazio è fatto per non dimenticare. I materiali che carichi, i nuclei che emergono, le note che scrivi: tutto resta, tutto può essere ritrovato. Comincia con qualcosa che vuoi non perdere.",
+  'Compagno di bottega': "Benvenuto. Questo è uno spazio per lavorare, non per capire tutto subito. Basta cominciare — un quaderno, un materiale, una parola. Il resto viene da sé.",
+  'Provocatore': "Uno studio è sempre anche un luogo di crisi. Porta qui le tue domande più difficili, quelle che non sai ancora come formulare. L'atlante comincerà a mostrarle."
 };
 
 let user=null,profile=null,materiali=[],percorsi=[],bozza={titolo:'',testo:'',id:null};
@@ -1494,7 +1494,14 @@ document.addEventListener('click',function(ev){
 });
 
 // ── INIT ──────────────────────────────────────────────
-db.auth.getSession().then(({data})=>{if(data.session?.user)initApp(data.session.user);});
-db.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){document.getElementById('app-screen').classList.add('hidden');document.getElementById('auth-screen').classList.remove('hidden');}});
+function krillInit(){
+  db.auth.getSession().then(({data})=>{if(data.session?.user)initApp(data.session.user);});
+  db.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){document.getElementById('app-screen').classList.add('hidden');document.getElementById('auth-screen').classList.remove('hidden');}});
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', krillInit);
+} else {
+  krillInit();
+}
 </script>
 </html>
