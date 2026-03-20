@@ -295,6 +295,31 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
 .empty-state-icon { font-size: 28px; margin-bottom: 1rem; opacity: 0.5; }
 .empty-state-title { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; }
 .empty-state-desc { font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-sans); line-height: 1.6; margin-bottom: 1.25rem; }
+
+/* NUCLEI SUGGERITI */
+.nuclei-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; min-height: 24px; }
+.nucleo-chip-suggest {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.65rem; border-radius: 999px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: 12px; font-family: var(--font-sans);
+  cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+  user-select: none;
+}
+.nucleo-chip-suggest:hover { background: var(--color-background-primary); border-color: var(--color-border-primary); color: var(--color-text-primary); }
+.nucleo-chip-suggest.accepted { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.suggest-btn {
+  font-size: 11px; font-family: var(--font-sans);
+  color: var(--color-text-tertiary); cursor: pointer;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent; border-radius: var(--border-radius-md);
+  padding: 0.3rem 0.75rem; margin-top: 0.25rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.suggest-btn:hover:not(:disabled) { color: var(--color-text-secondary); border-color: var(--color-border-primary); }
+.suggest-btn:disabled { opacity: 0.45; cursor: default; }
 </style>
 
 <!-- AUTH -->
@@ -805,13 +830,31 @@ function buildPosturaModal(){
 }
 
 function buildImpostazioniModal(){
+  const k=localStorage.getItem('krill_anthropic_key')||'';
   return `<div class="modal-box">
     <h2>Impostazioni</h2>
     <div class="modal-sub">Configura il tuo scrittoio.</div>
-    <div class="modal-footer" style="margin-top:0.5rem;">
-      <button class="tool-btn" onclick="closeModal()">Chiudi</button>
+    <label class="form-label">API Key Anthropic</label>
+    <input class="form-input" type="password" id="imp-apikey" placeholder="sk-ant-…" value="${k}"/>
+    <p style="font-size:11px;font-family:var(--font-sans);color:var(--color-text-tertiary);margin-top:-0.5rem;margin-bottom:1rem;line-height:1.6;">
+      Ottienila su <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-text-secondary);">console.anthropic.com</a> → API Keys → Create Key.<br>
+      Viene salvata solo nel tuo browser.
+    </p>
+    <div class="modal-footer">
+      <button class="tool-btn" onclick="closeModal()">Annulla</button>
+      <button class="btn-primary" onclick="salvaImpostazioni()">Salva</button>
     </div>
+    <div class="modal-msg" id="imp-msg">${k?'✓ API key già salvata':''}</div>
   </div>`;
+}
+
+function salvaImpostazioni(){
+  const k=document.getElementById('imp-apikey').value.trim();
+  if(!k){document.getElementById('imp-msg').textContent='Incolla la tua API key.';return;}
+  if(!k.startsWith('sk-ant-')){document.getElementById('imp-msg').textContent='La key deve iniziare con sk-ant-…';return;}
+  localStorage.setItem('krill_anthropic_key',k);
+  document.getElementById('imp-msg').textContent='✓ Salvata. Il compagno è attivo.';
+  setTimeout(closeModal,1200);
 }
 
 function buildNotaModal(){
@@ -843,8 +886,13 @@ function buildNotaModal(){
       </div>
       <input type="file" id="nota-file" style="display:none;" onchange="fileSelezionato(this)" accept=".pdf,image/*"/>
     </div>
-    <label class="form-label">Nuclei (separati da ·)</label>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem;">
+      <label class="form-label" style="margin-bottom:0;">Nuclei (separati da ·)</label>
+      <button class="suggest-btn" id="suggest-nuclei-btn" onclick="suggerisciNuclei()" type="button">✶ suggerisci</button>
+    </div>
     <input class="form-input" type="text" id="nota-nuclei" placeholder="es: soglia · assenza · memoria"/>
+    <div id="nuclei-chips-wrap" class="nuclei-chips" style="display:none;"></div>
+    <div id="nuclei-suggest-msg" class="const-micro" style="margin-bottom:0.5rem;min-height:14px;"></div>
     <label class="form-label">Quaderno</label>
     <select class="form-select" id="nota-quaderno">
       <option value="">Nessun quaderno</option>
@@ -1194,6 +1242,95 @@ function openNucleus(nucleus){
 function filtraArchivio(f,el){filtroCorrente=f;document.querySelectorAll('.filtri .filtro').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderArchivio();}
 function aggiornaTipoForm(){const t=document.getElementById('nota-tipo').value;document.getElementById('nota-testo-wrap').style.display=(t==='link'||t==='pdf'||t==='immagine')?'none':'block';document.getElementById('nota-url-wrap').style.display=t==='link'?'block':'none';document.getElementById('nota-file-wrap').style.display=(t==='pdf'||t==='immagine')?'block':'none';}
 function fileSelezionato(input){document.getElementById('upload-label').textContent=input.files[0]?input.files[0].name:'Clicca per scegliere un file';}
+
+// ── SUGGERIMENTO NUCLEI AI ────────────────────────────
+async function suggerisciNuclei(){
+  const titolo = document.getElementById('nota-titolo')?.value?.trim() || '';
+  const contenuto = document.getElementById('nota-contenuto')?.value?.trim() || '';
+  const url = document.getElementById('nota-url')?.value?.trim() || '';
+  const testo = contenuto || titolo || url;
+
+  const btn = document.getElementById('suggest-nuclei-btn');
+  const chipsWrap = document.getElementById('nuclei-chips-wrap');
+  const msg = document.getElementById('nuclei-suggest-msg');
+
+  if(!testo){ msg.textContent = 'Aggiungi un titolo o un contenuto prima di suggerire nuclei.'; return; }
+
+  const key = localStorage.getItem('krill_anthropic_key');
+  if(!key){ msg.textContent = 'Configura la tua API key in Impostazioni per usare questa funzione.'; return; }
+  if(aiRimaste() <= 0){ mostraPaywall('Hai esaurito le richieste AI di questo mese.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '…';
+  msg.textContent = 'Il compagno sta leggendo il materiale…';
+  chipsWrap.style.display = 'none';
+
+  try {
+    const prompt = `Sei un assistente di ricerca. Leggi questo materiale e suggerisci esattamente 5 nuclei concettuali in italiano.
+Un nucleo è una parola o breve espressione (1-3 parole) che cattura un concetto, tema o tensione centrale del testo.
+Scegli nuclei specifici e significativi, non generici.
+Rispondi SOLO con i 5 nuclei separati da " · " su una riga sola, senza altro testo.
+Esempio: soglia · memoria involontaria · immagine · perdita · tempo
+
+Materiale:
+Titolo: ${titolo}
+${contenuto ? 'Contenuto: ' + contenuto.slice(0, 1500) : ''}
+${url ? 'URL: ' + url : ''}`;
+
+    const risposta = await callAI(key, prompt, 120);
+    await incrementaAi();
+
+    // Parsa i nuclei dalla risposta
+    const nucleiSuggeriti = risposta
+      .split(/·|,|;/)
+      .map(n => n.trim().toLowerCase())
+      .filter(n => n.length > 0 && n.length < 40)
+      .slice(0, 5);
+
+    if(nucleiSuggeriti.length === 0){
+      msg.textContent = 'Nessun nucleo estratto. Prova ad aggiungere più contenuto.';
+      btn.disabled = false; btn.textContent = '✦ suggerisci';
+      return;
+    }
+
+    // Mostra i chip cliccabili
+    chipsWrap.style.display = 'flex';
+    chipsWrap.innerHTML = nucleiSuggeriti.map(n =>
+      `<span class="nucleo-chip-suggest" onclick="toggleNucleoChip(this,'${n.replace(/'/g,"\\'")}')">+ ${n}</span>`
+    ).join('');
+    msg.textContent = 'Clicca i nuclei che vuoi aggiungere.';
+
+  } catch(e) {
+    msg.textContent = 'Errore di connessione. Riprova.';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ suggerisci';
+}
+
+function toggleNucleoChip(el, nucleo){
+  const input = document.getElementById('nota-nuclei');
+  const accepted = el.classList.toggle('accepted');
+  const current = input.value.trim();
+
+  if(accepted){
+    // Aggiungi il nucleo al campo
+    el.textContent = '✓ ' + nucleo;
+    if(current){
+      const esistenti = current.split('·').map(n=>n.trim()).filter(Boolean);
+      if(!esistenti.includes(nucleo)){
+        input.value = [...esistenti, nucleo].join(' · ');
+      }
+    } else {
+      input.value = nucleo;
+    }
+  } else {
+    // Rimuovi il nucleo dal campo
+    el.textContent = '+ ' + nucleo;
+    const aggiornati = input.value.split('·').map(n=>n.trim()).filter(n=>n && n!==nucleo);
+    input.value = aggiornati.join(' · ');
+  }
+}
 
 async function salvaNota(){
   const titolo=document.getElementById('nota-titolo').value.trim();
