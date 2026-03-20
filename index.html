@@ -1,25 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Krill Studium</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --color-background-primary: #fcfaf6;
   --color-background-secondary: #f4efe8;
   --color-background-tertiary: #efe9e1;
-
   --color-text-primary: #1f1b18;
   --color-text-secondary: #5f5a54;
   --color-text-tertiary: #8a837a;
-
   --color-border-primary: #b8aea1;
   --color-border-secondary: #d7d0c7;
   --color-border-tertiary: #e7e0d7;
-
   --border-radius-md: 10px;
   --border-radius-lg: 16px;
-
   --font-sans: Inter, Arial, sans-serif;
   --font-serif: Georgia, serif;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; width: 100%; overflow: hidden; }
 body { font-family: var(--font-serif, Georgia, serif); background: var(--color-background-tertiary); color: var(--color-text-primary); }
@@ -144,7 +145,6 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
 .postura-option-desc { font-size: 12px; color: var(--color-text-secondary); font-family: var(--font-sans); }
 .lock-tag { font-size: 9px; font-family: var(--font-sans); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
 
-
 /* COSTELLAZIONI */
 .costellazioni-wrap { display:grid; grid-template-columns: minmax(0,1fr) 280px; gap:1.25rem; align-items:stretch; }
 .costellazioni-stage { background: radial-gradient(circle at top, rgba(255,255,255,0.7), transparent 45%), var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow:hidden; position:relative; min-height:460px; }
@@ -181,7 +181,6 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
   .costellazioni-side { min-height:auto; }
 }
 
-
 /* QUADERNI VIVI + RIFERIMENTI */
 .quaderno-microgrid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
 .quaderno-panel { background:var(--color-background-secondary); border-radius: var(--border-radius-md); padding:1rem; }
@@ -200,38 +199,102 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
 
 /* ── MODAL SYSTEM ── */
 #modal-root:empty { display:none; }
-#modal-root {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-}
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
+#modal-root { position: fixed; inset: 0; z-index: 9999; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; padding: 24px; }
 .percorso-card { cursor:pointer; }
 .percorso-card .material-action-btn { cursor:pointer; pointer-events:auto; }
-
-.modal-box {
-  position: relative;
-  z-index: 10000;
-  width: min(480px, 100%);
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 2rem;
-  border-radius: 16px;
-  background: var(--color-background-primary, #fcfaf6);
-  border: 1px solid var(--color-border-secondary, #d7d0c7);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-}
+.modal-box { position: relative; z-index: 10000; width: min(480px, 100%); max-height: 85vh; overflow-y: auto; padding: 2rem; border-radius: 16px; background: var(--color-background-primary, #fcfaf6); border: 1px solid var(--color-border-secondary, #d7d0c7); box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
 .modal-box h2 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
 .modal-sub { font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-sans); margin-bottom: 1.5rem; }
+
+/* ── ONBOARDING TOUR ── */
+.onboarding-backdrop {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(20,17,14,0.72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: fadeInBack 0.4s ease;
+}
+@keyframes fadeInBack { from { opacity:0; } to { opacity:1; } }
+.onboarding-box {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: min(520px, 100%);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+  animation: slideUpIn 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+}
+@keyframes slideUpIn { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.onboarding-step-indicator {
+  display: flex; gap: 6px; margin-bottom: 2rem;
+}
+.onboarding-dot {
+  width: 20px; height: 2px; border-radius: 2px;
+  background: var(--color-border-secondary);
+  transition: background 0.3s, width 0.3s;
+}
+.onboarding-dot.active { background: var(--color-text-primary); width: 32px; }
+.onboarding-kicker {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-text-tertiary); font-family: var(--font-sans);
+  margin-bottom: 0.75rem;
+}
+.onboarding-title {
+  font-size: 24px; font-weight: 400; line-height: 1.25;
+  margin-bottom: 1rem; color: var(--color-text-primary);
+}
+.onboarding-body {
+  font-size: 14px; line-height: 1.8; color: var(--color-text-secondary);
+  margin-bottom: 2rem; font-style: italic;
+}
+.onboarding-stanze {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; margin-bottom: 2rem;
+}
+.onboarding-stanza {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 0.9rem 1rem;
+}
+.onboarding-stanza-name {
+  font-size: 13px; font-weight: 500; margin-bottom: 0.3rem;
+}
+.onboarding-stanza-desc {
+  font-size: 11px; color: var(--color-text-tertiary);
+  font-family: var(--font-sans); line-height: 1.5;
+}
+.onboarding-nav {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.onboarding-skip {
+  font-size: 11px; font-family: var(--font-sans);
+  color: var(--color-text-tertiary); cursor: pointer;
+  border: none; background: transparent; padding: 0;
+}
+.onboarding-skip:hover { color: var(--color-text-secondary); }
+.onboarding-next {
+  font-size: 13px; font-family: var(--font-sans);
+  padding: 0.6rem 1.5rem;
+  background: var(--color-text-primary); color: var(--color-background-primary);
+  border: none; border-radius: var(--border-radius-md); cursor: pointer;
+  transition: opacity 0.15s;
+}
+.onboarding-next:hover { opacity: 0.85; }
+
+/* empty state */
+.empty-state {
+  background: var(--color-background-primary);
+  border: 0.5px dashed var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+.empty-state-icon { font-size: 28px; margin-bottom: 1rem; opacity: 0.5; }
+.empty-state-title { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; }
+.empty-state-desc { font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-sans); line-height: 1.6; margin-bottom: 1.25rem; }
 </style>
 
 <!-- AUTH -->
@@ -341,7 +404,6 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
       <div id="percorsi-list"></div>
     </div>
     <!-- COSTELLAZIONI -->
-
     <div class="screen" id="screen-costellazioni">
       <div style="margin-bottom:2rem;">
         <h2 style="margin-bottom:0.3rem;">Atlante</h2>
@@ -362,7 +424,6 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
         <div class="costellazioni-side" id="costellazioni-detail"></div>
       </div>
     </div>
-
     <!-- SCRITTURA -->
     <div class="screen" id="screen-scrittura">
       <div id="ai-limite-banner"></div>
@@ -407,7 +468,7 @@ h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; }
   </div>
 </div>
 
-<!-- MODAL ROOT — sempre figlio diretto del body, sopra tutto -->
+<!-- MODAL ROOT -->
 <div id="modal-root"></div>
 
 <script>
@@ -420,16 +481,117 @@ const LIMITI={gratuito:{materiali:20,ai_mese:15,posture:['Cartografo','Custode',
 const TUTTE_POSTURE=[{id:'Cartografo',desc:'Evidenzia strutture, convergenze, assi.'},{id:'Editor',desc:'Segnala ridondanze, gerarchia, forma.'},{id:'Critico',desc:'Problematizza, distingue, mette in dubbio.'},{id:'Custode',desc:'Ricorda, riattiva, protegge la coerenza.'},{id:'Compagno di bottega',desc:'Tono caldo e non giudicante.'},{id:'Provocatore',desc:'Sposta l\'asse. Propone ipotesi inattese.'}];
 const FALLBACK={'Cartografo':'I materiali che stai raccogliendo tracciano una mappa ancora parziale. Vale la pena chiedersi quali territori mancano.','Editor':'La forma è ancora implicita. Prima di aggiungere altro, guarda cosa hai già.','Critico':'Ogni ipotesi ha bisogno di resistenza. Cosa metti davvero in dubbio in questa ricerca?','Custode':'Non dimenticare da dove sei partita. Il filo esiste — a volte va solo ritrovato.','Compagno di bottega':'Stai lavorando. È già qualcosa. Continua, senza fretta.','Provocatore':'E se il punto di partenza fosse sbagliato? Vale la pena chiederlo almeno una volta.'};
 
+// Messaggi di benvenuto per utente nuovo — scritti a mano, tono Krill
+const BENVENUTO_NUOVO = {
+  'Cartografo': 'Benvenuto nello Studium. Questo è il tuo scrittoio: uno spazio per sviluppare una ricerca nel tempo, non per archiviare in fretta. Inizia da dove sei — un'intuizione, un titolo, una domanda. Il compagno ti aiuterà a tracciare la mappa.',
+  'Editor': 'Sei arrivato in uno spazio di lavoro, non di esposizione. Qui la forma viene dopo. Prima vengono i materiali, i nuclei, le domande senza risposta. Comincia con quello che hai già in mente.',
+  'Critico': 'Ogni ricerca ha un punto cieco. Questo spazio serve anche a trovarlo. Inizia con un quaderno — anche vago, anche provvisorio. La chiarezza arriverà mentre accumuli.',
+  'Custode': 'Questo spazio è fatto per non dimenticare. I materiali che carichi, i nuclei che emergono, le note che scrivi: tutto resta, tutto può essere ritrovato. Comincia con qualcosa che vuoi non perdere.',
+  'Compagno di bottega': 'Benvenuto. Questo è uno spazio per lavorare, non per capire tutto subito. Basta cominciare — un quaderno, un materiale, una parola. Il resto viene da sé.',
+  'Provocatore': 'Uno studio è sempre anche un luogo di crisi. Porta qui le tue domande più difficili, quelle che non sai ancora come formulare. L'atlante comincerà a mostrarle.'
+};
+
 let user=null,profile=null,materiali=[],percorsi=[],bozza={titolo:'',testo:'',id:null};
 let postura=localStorage.getItem('krill_postura')||'Cartografo';
 let filtroCorrente='tutti',isLogin=true,saveTimer=null;
-
 let selectedConstellation='';
+let isNuovoUtente=false;
 
+// ── ONBOARDING ────────────────────────────────────────
+const ONBOARDING_STEPS = [
+  {
+    kicker: 'Benvenuto in Krill Studium',
+    title: 'Il tuo scrittoio digitale.',
+    body: 'Uno spazio per sviluppare una ricerca nel tempo. Non un archivio, non un chatbot — un luogo dove le fonti si dispongono, i nuclei emergono e la scrittura si integra nel processo.',
+    tipo: 'intro'
+  },
+  {
+    kicker: 'Le quattro stanze',
+    title: 'Lo spazio è organizzato così.',
+    body: 'Ogni stanza ha una funzione diversa. Puoi muoverti liberamente tra di esse — la ricerca non segue un percorso lineare.',
+    tipo: 'stanze'
+  },
+  {
+    kicker: 'Il compagno di ricerca',
+    title: 'Una presenza sobria, non invasiva.',
+    body: 'Il compagno legge la tua ricerca mentre prende forma. Non risponde a domande generiche — accompagna il tuo lavoro specifico, con la postura che scegli tu. Puoi cambiare postura in qualsiasi momento dalla barra laterale.',
+    tipo: 'compagno'
+  }
+];
+
+const STANZE = [
+  { name: 'Studio', desc: 'Panoramica della ricerca. Il compagno parla da qui.' },
+  { name: 'Biblioteca', desc: 'Fonti, PDF, citazioni, link, immagini.' },
+  { name: 'Quaderni', desc: 'Progetti di ricerca vivi, con note e mappa propria.' },
+  { name: 'Atlante', desc: 'Mappa dinamica dei nuclei concettuali.' }
+];
+
+let onboardingStep = 0;
+
+function isNuovoUtenteCheck() {
+  return !localStorage.getItem('krill_onboarding_done_' + (user?.id || ''));
+}
+
+function markOnboardingDone() {
+  localStorage.setItem('krill_onboarding_done_' + (user?.id || ''), '1');
+}
+
+function showOnboarding() {
+  renderOnboardingStep(0);
+}
+
+function renderOnboardingStep(step) {
+  onboardingStep = step;
+  const s = ONBOARDING_STEPS[step];
+  const total = ONBOARDING_STEPS.length;
+  const isLast = step === total - 1;
+
+  const dotsHtml = ONBOARDING_STEPS.map((_,i) =>
+    `<div class="onboarding-dot ${i===step?'active':''}"></div>`
+  ).join('');
+
+  let contentHtml = '';
+  if (s.tipo === 'stanze') {
+    contentHtml = `<div class="onboarding-stanze">
+      ${STANZE.map(st => `<div class="onboarding-stanza">
+        <div class="onboarding-stanza-name">${st.name}</div>
+        <div class="onboarding-stanza-desc">${st.desc}</div>
+      </div>`).join('')}
+    </div>`;
+  } else {
+    contentHtml = `<p class="onboarding-body">${s.body}</p>`;
+  }
+
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="onboarding-backdrop">
+      <div class="onboarding-box">
+        <div class="onboarding-step-indicator">${dotsHtml}</div>
+        <div class="onboarding-kicker">${s.kicker}</div>
+        <h2 class="onboarding-title">${s.title}</h2>
+        ${contentHtml}
+        <div class="onboarding-nav">
+          <button class="onboarding-skip" onclick="closeOnboarding()">Salta introduzione</button>
+          <button class="onboarding-next" onclick="${isLast ? 'closeOnboarding()' : `renderOnboardingStep(${step+1})`}">
+            ${isLast ? 'Inizia a lavorare →' : 'Avanti'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  document.body.classList.add('modal-open');
+}
+
+function closeOnboarding() {
+  markOnboardingDone();
+  document.getElementById('modal-root').innerHTML = '';
+  document.body.classList.remove('modal-open');
+}
+
+// ── COSTELLAZIONI ─────────────────────────────────────
 const FALLBACK_CONSTELLATION = {
   nodes: [
     { id:'assenza', count:3, color:'#7D6A58', desc:'Nodo centrale della costellazione: attira immagini, soglie e figure della perdita.' },
-    { id:'soglia', count:2, color:'#5E7A72', desc:'Qui la ricerca si piega verso il passaggio, il bordo, l’attraversamento non compiuto.' },
+    { id:'soglia', count:2, color:'#5E7A72', desc:'Qui la ricerca si piega verso il passaggio, il bordo, l'attraversamento non compiuto.' },
     { id:'memoria', count:2, color:'#7B6280', desc:'Il polo che tiene insieme ritorni, tracce, ciò che insiste senza manifestarsi del tutto.' },
     { id:'immagine', count:2, color:'#6F7B9A', desc:'Le immagini qui non illustrano: condensano tensioni e ritardi.' },
     { id:'vuoto', count:2, color:'#8B7355', desc:'Il vuoto come forma attiva, come spazio in attesa di articolazione.' },
@@ -440,10 +602,7 @@ const FALLBACK_CONSTELLATION = {
 const CONSTELLATION_COLORS=['#7D6A58','#5E7A72','#7B6280','#6F7B9A','#8B7355','#A2866B','#6C7A6F','#6C6F86','#8C6E63','#647B8A'];
 
 function splitNuclei(value){
-  return (value||'')
-    .split(/·|,|;|\n/)
-    .map(x=>x.trim().toLowerCase())
-    .filter(Boolean);
+  return (value||'').split(/·|,|;|\n/).map(x=>x.trim().toLowerCase()).filter(Boolean);
 }
 
 function buildDynamicConstellation(){
@@ -460,10 +619,9 @@ function buildDynamicConstellation(){
     }
   });
   const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  if(top.length===0) return FALLBACK_CONSTELLATION;
+  if(top.length===0) return null; // null = nessun dato reale
   const nodes=top.map(([id,count],idx)=>({
-    id,
-    count,
+    id, count,
     color: CONSTELLATION_COLORS[idx % CONSTELLATION_COLORS.length],
     desc:`Il nucleo "${id}" ricorre ${count} ${count===1?'volta':'volte'} nei tuoi materiali e sta formando un piccolo campo gravitazionale.`
   }));
@@ -471,15 +629,13 @@ function buildDynamicConstellation(){
   const links=Object.entries(cooccur)
     .map(([key,w])=>({pair:key.split('||'),w}))
     .filter(x=>allowed.has(x.pair[0]) && allowed.has(x.pair[1]))
-    .sort((a,b)=>b.w-a.w)
-    .slice(0,18)
-    .map(x=>x.pair);
+    .sort((a,b)=>b.w-a.w).slice(0,18).map(x=>x.pair);
   return {nodes,links};
 }
 
 function layoutConstellationNodes(nodes, selectedId){
   const width=700, height=390, cx=350, cy=195;
-  const selected=nodes.find(n=>n.id===selectedId) || nodes[0];
+  const selected=nodes.find(n=>n.id===selectedId)||nodes[0];
   const others=nodes.filter(n=>n.id!==selected.id).sort((a,b)=>b.count-a.count);
   const maxCount=Math.max(...nodes.map(n=>n.count||1),1);
   const laid=[];
@@ -488,12 +644,7 @@ function layoutConstellationNodes(nodes, selectedId){
     const angle=(Math.PI*2*idx)/Math.max(others.length,1)-Math.PI/2;
     const ring=idx<4?118:160;
     const jitter=((idx%2)*14)-7;
-    laid.push({
-      ...n,
-      x: cx + Math.cos(angle)*(ring+jitter),
-      y: cy + Math.sin(angle)*(ring-jitter),
-      baseR: 13 + Math.round((n.count/maxCount)*12)
-    });
+    laid.push({...n,x:cx+Math.cos(angle)*(ring+jitter),y:cy+Math.sin(angle)*(ring-jitter),baseR:13+Math.round((n.count/maxCount)*12)});
   });
   return laid;
 }
@@ -502,9 +653,8 @@ function relatedMaterialsForNucleus(nucleus){
   return materiali.filter(m=>splitNuclei(m.nuclei).includes((nucleus||'').toLowerCase())).slice(0,5);
 }
 
-
 function escapeSingleQuotes(value){
-  return String(value || '').replace(/'/g, "\'");
+  return String(value||'').replace(/'/g,"\\'");
 }
 
 function renderCostellazioni(){
@@ -513,53 +663,66 @@ function renderCostellazioni(){
   if(!stage||!detail) return;
 
   const graph=buildDynamicConstellation();
-  if(!selectedConstellation || !graph.nodes.some(n=>n.id===selectedConstellation)) {
-    selectedConstellation=graph.nodes[0]?.id || 'assenza';
+
+  // Empty state — nessun nucleo ancora
+  if(!graph){
+    stage.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;height:390px;">
+        <div style="text-align:center;padding:2rem;max-width:320px;">
+          <div style="font-size:32px;opacity:0.2;margin-bottom:1rem;">◦</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:0.5rem;">L'atlante è ancora vuoto.</div>
+          <div style="font-size:12px;color:var(--color-text-tertiary);font-family:var(--font-sans);line-height:1.6;">I nuclei emergono dai materiali che carichi in Biblioteca. Aggiungi la tua prima fonte con un nucleo associato — l'atlante comincerà a prendere forma.</div>
+          <button class="btn-primary" style="margin-top:1.25rem;" onclick="openModal('nota')">+ Aggiungi un materiale</button>
+        </div>
+      </div>`;
+    detail.innerHTML = `
+      <div style="padding:1.5rem 0.5rem;">
+        <div class="const-kicker">Atlante</div>
+        <div style="font-size:15px;font-weight:500;margin-bottom:0.75rem;margin-top:0.35rem;">La mappa attende.</div>
+        <div class="const-micro" style="line-height:1.7;">Ogni nucleo che assegni a un materiale diventa un nodo. Quando due materiali condividono un nucleo, appare un legame. L'atlante è generativo: cresce con la tua ricerca.</div>
+      </div>`;
+    return;
   }
-  const nodes=layoutConstellationNodes(graph.nodes, selectedConstellation).map(n=>({
-    ...n,
-    density:n.count||0,
-    r:n.baseR
-  }));
+
+  if(!selectedConstellation || !graph.nodes.some(n=>n.id===selectedConstellation)){
+    selectedConstellation=graph.nodes[0]?.id||'';
+  }
+  const nodes=layoutConstellationNodes(graph.nodes, selectedConstellation).map(n=>({...n,density:n.count||0,r:n.baseR}));
   const nodeMap=Object.fromEntries(nodes.map(n=>[n.id,n]));
   const selected=nodeMap[selectedConstellation];
-
   const activeSet=new Set([selected.id]);
-  graph.links.forEach(([a,b])=>{ if(a===selected.id||b===selected.id){ activeSet.add(a); activeSet.add(b); } });
+  graph.links.forEach(([a,b])=>{if(a===selected.id||b===selected.id){activeSet.add(a);activeSet.add(b);}});
 
-  const svg = `
+  const svg=`
     <svg class="costellazioni-svg" viewBox="0 0 700 390" preserveAspectRatio="xMidYMid meet">
       <defs>
         <radialGradient id="constGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(255,255,255,0.9)" />
-          <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+          <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
         </radialGradient>
       </defs>
       <circle cx="${selected.x}" cy="${selected.y}" r="${selected.r+34}" fill="url(#constGlow)" opacity="0.75"></circle>
       ${graph.links.map(([a,b])=>{
-        const na=nodeMap[a], nb=nodeMap[b];
+        const na=nodeMap[a],nb=nodeMap[b];
         if(!na||!nb) return '';
-        const active = a===selected.id || b===selected.id;
+        const active=a===selected.id||b===selected.id;
         return `<line class="const-link ${active?'active':''}" x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}"></line>`;
       }).join('')}
       ${nodes.map(n=>{
         const selectedCls=n.id===selected.id?'selected':'';
         const dimmedCls=!activeSet.has(n.id)?'dimmed':'';
         const scale=n.id===selected.id?1.16:1;
-        return `
-          <g class="const-node ${selectedCls} ${dimmedCls}" transform="translate(${n.x},${n.y}) scale(${scale})" onclick="selectConstellation('${escapeSingleQuotes(n.id)}')">
-            <circle class="outer" r="${n.r}" fill="rgba(255,255,255,0.86)" stroke="${n.color}" opacity="${n.id===selected.id?1:0.82}"></circle>
-            <circle class="inner" r="${Math.max(5, n.r-6)}" fill="${n.color}" opacity="${n.id===selected.id?0.92:0.72}"></circle>
-            <text text-anchor="middle" y="${n.r+18}">${n.id}</text>
-          </g>
-        `;
+        return `<g class="const-node ${selectedCls} ${dimmedCls}" transform="translate(${n.x},${n.y}) scale(${scale})" onclick="selectConstellation('${escapeSingleQuotes(n.id)}')">
+          <circle class="outer" r="${n.r}" fill="rgba(255,255,255,0.86)" stroke="${n.color}" opacity="${n.id===selected.id?1:0.82}"></circle>
+          <circle class="inner" r="${Math.max(5,n.r-6)}" fill="${n.color}" opacity="${n.id===selected.id?0.92:0.72}"></circle>
+          <text text-anchor="middle" y="${n.r+18}">${n.id}</text>
+        </g>`;
       }).join('')}
-    </svg>
-  `;
+    </svg>`;
   stage.innerHTML=svg;
 
   const rel=relatedMaterialsForNucleus(selected.id);
-  detail.innerHTML = `
+  detail.innerHTML=`
     <div class="const-detail-head">
       <div class="const-kicker">Nodo selezionato</div>
       <div class="const-title">${selected.id}</div>
@@ -568,18 +731,14 @@ function renderCostellazioni(){
     <div>
       <div class="panel-label">Densità nel tuo archivio</div>
       <div class="const-density">
-        <div class="const-density-bar"><div class="const-density-fill" style="width:${Math.min(100, (selected.density||0)*16 + 12)}%; background:${selected.color};"></div></div>
+        <div class="const-density-bar"><div class="const-density-fill" style="width:${Math.min(100,(selected.density||0)*16+12)}%;background:${selected.color};"></div></div>
         <div class="const-micro">${selected.density||0} ritorni</div>
       </div>
     </div>
     <div>
       <div class="panel-label">Materiali correlati</div>
       <div class="const-related-list">
-        ${rel.length ? rel.map(item => `
-          <div class="const-related-item" onclick="openMaterialDetail(${item.id})">
-            <div class="const-related-type">${item.tipo}</div>
-            <div class="const-related-title">${item.titolo}</div>
-          </div>`).join('') : '<div class="const-micro">Nessun materiale esplicito ancora. La costellazione attende i tuoi appunti.</div>'}
+        ${rel.length?rel.map(item=>`<div class="const-related-item" onclick="openMaterialDetail(${item.id})"><div class="const-related-type">${item.tipo}</div><div class="const-related-title">${item.titolo}</div></div>`).join(''):'<div class="const-micro">Nessun materiale esplicito ancora. La costellazione attende i tuoi appunti.</div>'}
       </div>
     </div>
     <div>
@@ -589,15 +748,11 @@ function renderCostellazioni(){
     <div>
       <div class="panel-label">Lettura del compagno</div>
       <div class="suggerimento" style="min-height:auto;">${costellazioneCommento(selected)}</div>
-    </div>
-  `;
-  renderReferenceBox(selected.id, 'costellazioni-reference-preview');
+    </div>`;
+  renderReferenceBox(selected.id,'costellazioni-reference-preview');
 }
 
-function selectConstellation(id){
-  selectedConstellation=id;
-  renderCostellazioni();
-}
+function selectConstellation(id){ selectedConstellation=id; renderCostellazioni(); }
 
 function costellazioneCommento(node){
   const comments={
@@ -605,21 +760,16 @@ function costellazioneCommento(node){
     Editor:`Il nodo "${node.id}" ha abbastanza peso da chiedere una sezione autonoma o un sottoparagrafo dedicato.`,
     Critico:`Forse stai usando "${node.id}" come parola ombrello. Vale la pena distinguerne meglio le accezioni.`,
     Custode:`${capitalize(node.id)} ritorna senza clamore. È uno di quei nuclei che tengono insieme il resto.`,
-    'Compagno di bottega':`Qui c’è qualcosa che continua a bussare. ${capitalize(node.id)} non va forzato: va ascoltato ancora un poco.`,
+    'Compagno di bottega':`Qui c'è qualcosa che continua a bussare. ${capitalize(node.id)} non va forzato: va ascoltato ancora un poco.`,
     Provocatore:`E se "${node.id}" non fosse un tema secondario ma il vero centro nascosto della tua ricerca?`
   };
-  return comments[postura] || comments['Cartografo'];
+  return comments[postura]||comments['Cartografo'];
 }
 
-function capitalize(str){ return str ? str.charAt(0).toUpperCase()+str.slice(1) : ''; }
-
-
+function capitalize(str){ return str?str.charAt(0).toUpperCase()+str.slice(1):''; }
 
 // ── MODAL SYSTEM ──────────────────────────────────────
-// Tutti i modal vengono iniettati in #modal-root che è figlio diretto del body
-// Questo garantisce che position:fixed funzioni rispetto alla viewport
-
-function openModal(tipo) {
+function openModal(tipo){
   const root=document.getElementById('modal-root');
   closeModal();
   let html='';
@@ -627,22 +777,21 @@ function openModal(tipo) {
   else if(tipo==='impostazioni') html=buildImpostazioniModal();
   else if(tipo==='nota') html=buildNotaModal();
   else if(tipo==='percorso') html=buildPercorsoModal();
-  else if(tipo==='paywall') html=buildPaywallModal(tipo._msg||'');
+  else if(tipo==='paywall') html=buildPaywallModal('');
   root.innerHTML=`<div class="modal-backdrop" onclick="handleBackdropClick(event)">${html}</div>`;
   document.body.classList.add('modal-open');
 }
 
-function closeModal() {
+function closeModal(){
   document.getElementById('modal-root').innerHTML='';
   document.body.classList.remove('modal-open');
 }
 
-function handleBackdropClick(e) {
+function handleBackdropClick(e){
   if(e.target.classList.contains('modal-backdrop')) closeModal();
 }
 
-// ── MODAL BUILDERS ────────────────────────────────────
-function buildPosturaModal() {
+function buildPosturaModal(){
   const consentite=limiti().posture;
   const opzioni=TUTTE_POSTURE.map(po=>{
     const bloccata=!consentite.includes(po.id);
@@ -652,34 +801,20 @@ function buildPosturaModal() {
       ${bloccata?'<span class="lock-tag">Krill</span>':''}
     </div>`;
   }).join('');
-  return `<div class="modal-box">
-    <h2>Postura del compagno</h2>
-    <div class="modal-sub">Cambia il modo in cui il compagno accompagna la tua ricerca.</div>
-    ${opzioni}
-    <div style="text-align:right;margin-top:1rem;"><button class="btn-primary" onclick="closeModal()">Conferma</button></div>
-  </div>`;
+  return `<div class="modal-box"><h2>Postura del compagno</h2><div class="modal-sub">Cambia il modo in cui il compagno accompagna la tua ricerca.</div>${opzioni}<div style="text-align:right;margin-top:1rem;"><button class="btn-primary" onclick="closeModal()">Conferma</button></div></div>`;
 }
 
-function buildImpostazioniModal() {
-  const k=localStorage.getItem('krill_anthropic_key')||'';
+function buildImpostazioniModal(){
   return `<div class="modal-box">
     <h2>Impostazioni</h2>
     <div class="modal-sub">Configura il tuo scrittoio.</div>
-    <label class="form-label">API Key Anthropic</label>
-    <input class="form-input" type="password" id="imp-apikey" placeholder="sk-ant-…" value="${k}"/>
-    <p style="font-size:11px;font-family:var(--font-sans);color:var(--color-text-tertiary);margin-top:-0.5rem;margin-bottom:1rem;line-height:1.6;">
-      Ottienila su <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-text-secondary);">console.anthropic.com</a> → API Keys → Create Key.<br>
-      Viene salvata solo nel tuo browser.
-    </p>
-    <div class="modal-footer">
-      <button class="tool-btn" onclick="closeModal()">Annulla</button>
-      <button class="btn-primary" onclick="salvaImpostazioni()">Salva</button>
+    <div class="modal-footer" style="margin-top:0.5rem;">
+      <button class="tool-btn" onclick="closeModal()">Chiudi</button>
     </div>
-    <div class="modal-msg" id="imp-msg">${k?'✓ API key già salvata':''}</div>
   </div>`;
 }
 
-function buildNotaModal() {
+function buildNotaModal(){
   return `<div class="modal-box">
     <h2>Nuovo materiale</h2>
     <div class="modal-sub">Aggiungi all'archivio vivo.</div>
@@ -713,7 +848,7 @@ function buildNotaModal() {
     <label class="form-label">Quaderno</label>
     <select class="form-select" id="nota-quaderno">
       <option value="">Nessun quaderno</option>
-      ${percorsi.length ? percorsi.map(p=>`<option value="${p.id}">${p.titolo}</option>`).join('') : ''}
+      ${percorsi.length?percorsi.map(p=>`<option value="${p.id}">${p.titolo}</option>`).join(''):''}
     </select>
     <div class="modal-footer">
       <button class="tool-btn" onclick="closeModal()">Annulla</button>
@@ -723,7 +858,7 @@ function buildNotaModal() {
   </div>`;
 }
 
-function buildPercorsoModal() {
+function buildPercorsoModal(){
   return `<div class="modal-box">
     <h2>Nuovo quaderno</h2>
     <div class="modal-sub">Dai un nome a questo quaderno di ricerca.</div>
@@ -747,16 +882,16 @@ function buildPercorsoModal() {
   </div>`;
 }
 
-function buildPaywallModal(msg) {
+function buildPaywallModal(msg){
   return `<div class="modal-box" style="text-align:center;">
     <div style="font-size:16px;font-weight:500;margin-bottom:0.75rem;">La ricerca continua oltre.</div>
-    <div style="font-size:14px;font-style:italic;color:var(--color-text-secondary);font-family:var(--font-sans);line-height:1.6;margin-bottom:1rem;">${msg}</div>
+    <div style="font-size:14px;font-style:italic;color:var(--color-text-secondary);font-family:var(--font-sans);line-height:1.6;margin-bottom:1rem;">${msg||'Hai raggiunto i limiti del piano gratuito.'}</div>
     <p style="font-size:12px;font-family:var(--font-sans);color:var(--color-text-tertiary);margin-bottom:1.5rem;">Piano Krill — 8€/mese · archivio illimitato · 150 richieste AI · tutte le posture</p>
     <button class="btn-primary" onclick="closeModal()">Continua con il piano gratuito</button>
   </div>`;
 }
 
-function mostraPaywall(msg) {
+function mostraPaywall(msg){
   closeModal();
   const root=document.getElementById('modal-root');
   root.innerHTML=`<div class="modal-backdrop" onclick="handleBackdropClick(event)">${buildPaywallModal(msg)}</div>`;
@@ -764,7 +899,7 @@ function mostraPaywall(msg) {
 }
 
 // ── AUTH ──────────────────────────────────────────────
-async function authAction() {
+async function authAction(){
   const email=document.getElementById('auth-email').value.trim();
   const pw=document.getElementById('auth-password').value;
   const msg=document.getElementById('auth-msg');
@@ -772,15 +907,16 @@ async function authAction() {
   if(!email||!pw){msg.textContent='Inserisci email e password.';return;}
   btn.disabled=true;
   msg.textContent=isLogin?'Accesso in corso…':'Registrazione in corso…';
-  try {
+  try{
     const res=isLogin?await db.auth.signInWithPassword({email,password:pw}):await db.auth.signUp({email,password:pw});
     if(res.error){msg.textContent=res.error.message;btn.disabled=false;return;}
     if(!isLogin&&!res.data.session){msg.textContent='Controlla la tua email per confermare.';btn.disabled=false;return;}
+    isNuovoUtente=!isLogin; // se si sta registrando, è nuovo
     await initApp(res.data.session?.user||res.data.user);
-  } catch(e){msg.textContent='Errore di connessione.';btn.disabled=false;}
+  }catch(e){msg.textContent='Errore di connessione.';btn.disabled=false;}
 }
 
-function toggleAuth() {
+function toggleAuth(){
   isLogin=!isLogin;
   document.getElementById('auth-title').textContent=isLogin?'Entra nel tuo scrittoio':'Crea il tuo scrittoio';
   document.getElementById('auth-sub').textContent=isLogin?'Uno studio digitale per sviluppare una ricerca.':'Inizia gratuitamente. Nessuna carta richiesta.';
@@ -790,7 +926,7 @@ function toggleAuth() {
   document.getElementById('auth-btn').disabled=false;
 }
 
-async function initApp(u) {
+async function initApp(u){
   user=u;
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('app-screen').classList.remove('hidden');
@@ -799,9 +935,13 @@ async function initApp(u) {
   document.getElementById('postura-nav-name').textContent=postura;
   document.getElementById('home-postura-label').textContent='Il '+postura+' dice —';
   navigate('home');
+  // Mostra onboarding se utente nuovo
+  if(isNuovoUtenteCheck()){
+    setTimeout(()=>showOnboarding(), 600);
+  }
 }
 
-async function logout() {
+async function logout(){
   await db.auth.signOut();
   user=null;profile=null;materiali=[];percorsi=[];
   document.getElementById('app-screen').classList.add('hidden');
@@ -816,13 +956,13 @@ function limiti(){return LIMITI[piano()]||LIMITI.gratuito;}
 function aiRimaste(){return Math.max(0,limiti().ai_mese-(profile?.ai_richieste_mese||0));}
 function meseCorrente(){return new Date().toISOString().slice(0,7);}
 
-async function caricaProfilo() {
+async function caricaProfilo(){
   const {data}=await db.from('profiles').select('*').eq('id',user.id).maybeSingle();
   if(data){profile=data;}
   else{const {data:np}=await db.from('profiles').insert({id:user.id,email:user.email,piano:'gratuito',ai_richieste_mese:0,mese_corrente:meseCorrente()}).select().single();profile=np;}
 }
 
-async function incrementaAi() {
+async function incrementaAi(){
   const mese=meseCorrente();
   const nuove=profile.mese_corrente!==mese?1:(profile.ai_richieste_mese||0)+1;
   profile.ai_richieste_mese=nuove;profile.mese_corrente=mese;
@@ -830,7 +970,7 @@ async function incrementaAi() {
 }
 
 // ── NAV ───────────────────────────────────────────────
-function navigate(id) {
+function navigate(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('screen-'+id).classList.add('active');
@@ -842,160 +982,123 @@ function navigate(id) {
   if(id==='scrittura')renderScrittura();
 }
 
-
+// ── RIFERIMENTI ───────────────────────────────────────
 function termFromMaterial(item){
-  const nuclei = splitNuclei(item?.nuclei);
-  return nuclei[0] || (item?.titolo || '').trim();
+  const nuclei=splitNuclei(item?.nuclei);
+  return nuclei[0]||(item?.titolo||'').trim();
 }
-function wikipediaUrl(term){
-  return `https://it.wikipedia.org/wiki/Speciale:Ricerca/${encodeURIComponent(term||'')}`;
-}
-function treccaniUrl(term){
-  return `https://www.treccani.it/vocabolario/ricerca/${encodeURIComponent(term||'')}/`;
-}
+function wikipediaUrl(term){return `https://it.wikipedia.org/wiki/Speciale:Ricerca/${encodeURIComponent(term||'')}`;}
+function treccaniUrl(term){return `https://www.treccani.it/vocabolario/ricerca/${encodeURIComponent(term||'')}/`;}
 async function fetchWikipediaSummary(term){
-  const clean = String(term||'').trim();
+  const clean=String(term||'').trim();
   if(!clean) throw new Error('empty');
-  const url = 'https://it.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&redirects=1&format=json&origin=*&titles=' + encodeURIComponent(clean);
-  const res = await fetch(url);
+  const url='https://it.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&redirects=1&format=json&origin=*&titles='+encodeURIComponent(clean);
+  const res=await fetch(url);
   if(!res.ok) throw new Error('wiki');
-  const data = await res.json();
-  const pages = data?.query?.pages || {};
-  const page = Object.values(pages)[0];
-  const extract = page?.extract || '';
+  const data=await res.json();
+  const pages=data?.query?.pages||{};
+  const page=Object.values(pages)[0];
+  const extract=page?.extract||'';
   if(extract) return extract;
   throw new Error('wiki');
 }
-async function renderReferenceBox(term, targetId='biblioteca-reference-preview'){
-  const target = document.getElementById(targetId);
+async function renderReferenceBox(term,targetId='biblioteca-reference-preview'){
+  const target=document.getElementById(targetId);
   if(!target) return;
-  const cleanTerm = String(term||'').trim();
-  if(!cleanTerm){
-    target.innerHTML = 'Nessun termine selezionato.';
-    return;
-  }
-  target.innerHTML = `<div class="ref-preview">Sto cercando un riferimento per “${cleanTerm}”…</div>`;
-  let summary = '';
-  try{
-    summary = await fetchWikipediaSummary(cleanTerm);
-  }catch(e){
-    summary = 'Nessuna anteprima disponibile. Puoi comunque aprire il termine direttamente su Wikipedia o Treccani.';
-  }
-  target.innerHTML = `
+  const cleanTerm=String(term||'').trim();
+  if(!cleanTerm){target.innerHTML='Nessun termine selezionato.';return;}
+  target.innerHTML=`<div class="ref-preview">Sto cercando un riferimento per "${cleanTerm}"…</div>`;
+  let summary='';
+  try{summary=await fetchWikipediaSummary(cleanTerm);}
+  catch(e){summary='Nessuna anteprima disponibile. Puoi comunque aprire il termine direttamente su Wikipedia o Treccani.';}
+  target.innerHTML=`
     <div class="ref-preview"><strong>${cleanTerm}</strong><br>${summary}</div>
     <div>
       <a class="ref-link-btn" href="${wikipediaUrl(cleanTerm)}" target="_blank" rel="noopener noreferrer">Wikipedia ↗</a>
       <a class="ref-link-btn" href="${treccaniUrl(cleanTerm)}" target="_blank" rel="noopener noreferrer">Treccani ↗</a>
-    </div>
-  `;
+    </div>`;
 }
 function manualReferenceSearch(scope='biblioteca'){
-  const input = document.getElementById(scope + '-reference-input');
-  const preview = scope === 'scrittura' ? 'scrittura-reference-preview' : 'biblioteca-reference-preview';
-  renderReferenceBox(input?.value || '', preview);
+  const input=document.getElementById(scope+'-reference-input');
+  const preview=scope==='scrittura'?'scrittura-reference-preview':'biblioteca-reference-preview';
+  renderReferenceBox(input?.value||'',preview);
 }
 
 function extractQuadernoIdFromContent(content){
-  const m = String(content||'').match(/^\[\[Q:(.*?)\]\]\n?/);
-  return m ? m[1] : '';
+  const m=String(content||'').match(/^\[\[Q:(.*?)\]\]\n?/);
+  return m?m[1]:'';
 }
-function stripNoteMeta(content){
-  return String(content||'').replace(/^\[\[Q:.*?\]\]\n?/, '');
-}
-function materialDisplayContent(item){
-  return item?.tipo === 'nota' ? stripNoteMeta(item.contenuto || '') : (item?.contenuto || '');
-}
-function notesForQuaderno(quadernoId){
-  return materiali.filter(m => m.tipo === 'nota' && String(extractQuadernoIdFromContent(m.contenuto)) === String(quadernoId));
-}
-function buildNoteContent(body, quadernoId){
-  return `[[Q:${quadernoId||''}]]\n${body||''}`;
-}
+function stripNoteMeta(content){return String(content||'').replace(/^\[\[Q:.*?\]\]\n?/,'');}
+function materialDisplayContent(item){return item?.tipo==='nota'?stripNoteMeta(item.contenuto||''):(item?.contenuto||'');}
+function notesForQuaderno(quadernoId){return materiali.filter(m=>m.tipo==='nota'&&String(extractQuadernoIdFromContent(m.contenuto))===String(quadernoId));}
+function buildNoteContent(body,quadernoId){return `[[Q:${quadernoId||''}]]\n${body||''}`;}
 
 // ── HOME ──────────────────────────────────────────────
-async function renderHome() {
+async function renderHome(){
   const h=new Date().getHours();
   document.getElementById('home-greeting').textContent=(h<12?'Buongiorno':h<18?'Buon pomeriggio':'Buonasera')+'.';
   document.getElementById('home-stats').textContent=`${materiali.length} materiali · ${percorsi.length} quaderni attivi`;
   document.getElementById('home-materiali-count').textContent=materiali.length+' materiali';
   document.getElementById('home-piano-info').textContent=piano()==='krill'?'Piano Krill · illimitato':`Piano gratuito · ${limiti().materiali-materiali.length} rimasti`;
   const recenti=[...materiali].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,3);
-  document.getElementById('riprendere-list').innerHTML=recenti.length?recenti.map(m=>{const g=Math.round((Date.now()-new Date(m.created_at))/864e5);return`<div class="riprendere-row"><span class="riprendere-type">${m.tipo}</span><span class="riprendere-title">${m.titolo}</span><span class="riprendere-ago">${g===0?'oggi':g===1?'ieri':g+' giorni fa'}</span></div>`;}).join(''):'<div style="font-size:13px;color:var(--color-text-tertiary);font-family:var(--font-sans);padding:0.5rem 0;">Nessun materiale ancora.</div>';
+  document.getElementById('riprendere-list').innerHTML=recenti.length?recenti.map(m=>{
+    const g=Math.round((Date.now()-new Date(m.created_at))/864e5);
+    return`<div class="riprendere-row"><span class="riprendere-type">${m.tipo}</span><span class="riprendere-title">${m.titolo}</span><span class="riprendere-ago">${g===0?'oggi':g===1?'ieri':g+' giorni fa'}</span></div>`;
+  }).join(''):'<div style="font-size:13px;color:var(--color-text-tertiary);font-family:var(--font-sans);padding:0.5rem 0;">Nessun materiale ancora.</div>';
   const top=[...percorsi].sort((a,b)=>b.maturazione-a.maturazione)[0];
-  if(top){document.getElementById('home-pista-fase').textContent='Fase: '+top.fase;document.getElementById('home-pista-title').textContent=top.titolo;document.getElementById('home-pista-meta').textContent=(top.descrizione||'').slice(0,60)+(top.descrizione?.length>60?'…':'');}
+  if(top){
+    document.getElementById('home-pista-fase').textContent='Fase: '+top.fase;
+    document.getElementById('home-pista-title').textContent=top.titolo;
+    document.getElementById('home-pista-meta').textContent=(top.descrizione||'').slice(0,60)+(top.descrizione?.length>60?'…':'');
+  }
   generaMessaggioHome();
 }
 
-async function generaMessaggioHome() {
+async function generaMessaggioHome(){
   const el=document.getElementById('home-companion-text');
+  const isNuovo=materiali.length===0&&percorsi.length===0;
+
+  // Utente nuovo: messaggio fisso scritto a mano
+  if(isNuovo){
+    el.innerHTML=`<em>${BENVENUTO_NUOVO[postura]||BENVENUTO_NUOVO['Cartografo']}</em>`;
+    return;
+  }
+
+  // Utente con materiali: prova AI, fallback su testo fisso
   const key=localStorage.getItem('krill_anthropic_key');
   if(!key||aiRimaste()<=0){el.innerHTML=`<em>${FALLBACK[postura]||FALLBACK['Cartografo']}</em>`;return;}
   el.innerHTML='<em style="opacity:0.5;">Il compagno sta riflettendo…</em>';
   const nuclei=[...new Set(materiali.flatMap(m=>(m.nuclei||'').split('·').map(n=>n.trim()).filter(Boolean)))].slice(0,6).join(', ')||'nessun nucleo ancora';
   const piste=percorsi.map(p=>`"${p.titolo}" (${p.fase})`).join('; ')||'nessun percorso ancora';
-  try{const ris=await callAI(key,`Sei il compagno di ricerca Krill Studium, postura: ${postura}. Nuclei: ${nuclei}. Percorsi: ${piste}. Scrivi 2-3 frasi di apertura giornata in italiano, tono colto e sobrio. Solo il messaggio.`,180);el.innerHTML=`<em>${ris}</em>`;await incrementaAi();}
-  catch(e){el.innerHTML=`<em>${FALLBACK[postura]||FALLBACK['Cartografo']}</em>`;}
+  try{
+    const ris=await callAI(localStorage.getItem('krill_anthropic_key'),`Sei il compagno di ricerca Krill Studium, postura: ${postura}. Nuclei: ${nuclei}. Percorsi: ${piste}. Scrivi 2-3 frasi di apertura giornata in italiano, tono colto e sobrio. Solo il messaggio.`,180);
+    el.innerHTML=`<em>${ris}</em>`;
+    await incrementaAi();
+  }catch(e){el.innerHTML=`<em>${FALLBACK[postura]||FALLBACK['Cartografo']}</em>`;}
 }
 
-async function callAI(key,prompt,maxTokens=200) {
+async function callAI(key,prompt,maxTokens=200){
   const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
-  if(!res.ok)throw new Error('API '+res.status);
+  if(!res.ok) throw new Error('API '+res.status);
   const d=await res.json();
-  const t=d.content?.[0]?.text;if(!t)throw new Error('No content');return t;
+  const t=d.content?.[0]?.text;
+  if(!t) throw new Error('No content');
+  return t;
 }
 
 // ── ARCHIVIO ──────────────────────────────────────────
-async function caricaMateriali(){const{data}=await db.from('materiali').select('*').eq('user_id',user.id).order('created_at',{ascending:false});materiali=data||[];}
-
-
-function getMaterialById(id){
-  return materiali.find(m => String(m.id) === String(id));
+async function caricaMateriali(){
+  const {data}=await db.from('materiali').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
+  materiali=data||[];
 }
 
-function basename(path){
-  return (path || '').split('/').pop() || '';
-}
-
-function normalizeUrl(url){
-  if(!url) return '';
-  const trimmed = String(url).trim();
-  if(/^https?:\/\//i.test(trimmed)) return trimmed;
-  return 'https://' + trimmed.replace(/^\/+/,'');
-}
-
-function extractDomain(url){
-  try { return new URL(normalizeUrl(url)).hostname.replace(/^www\./,''); } catch(e){ return url || ''; }
-}
-
-function materialSourceLabel(item){
-  if(item.url) return extractDomain(item.url);
-  if(item.file_path) return basename(item.file_path);
-  return item.tipo === 'nota' ? 'appunto interno' : 'nessuna fonte esterna';
-}
-
-function encodeStoragePath(path){
-  return String(path || '').split('/').map(encodeURIComponent).join('/');
-}
-
-function getMaterialOpenUrlSync(item){
-  if(item.url) return normalizeUrl(item.url);
-  if(item.file_path) return `${SUPA_URL}/storage/v1/object/public/materiali/${encodeStoragePath(item.file_path)}`;
-  return '';
-}
-
-function openMaterialSource(id, ev){
-  if(ev){ ev.stopPropagation(); ev.preventDefault(); }
-  const item=getMaterialById(id);
-  if(!item) return;
-
-  const openUrl=getMaterialOpenUrlSync(item);
-  if(openUrl){
-    window.open(openUrl, '_blank', 'noopener,noreferrer');
-    return;
-  }
-
-  openMaterialDetail(id);
-}
+function getMaterialById(id){return materiali.find(m=>String(m.id)===String(id));}
+function basename(path){return(path||'').split('/').pop()||'';}
+function normalizeUrl(url){if(!url)return'';const trimmed=String(url).trim();if(/^https?:\/\//i.test(trimmed))return trimmed;return'https://'+trimmed.replace(/^\/+/,'');}
+function extractDomain(url){try{return new URL(normalizeUrl(url)).hostname.replace(/^www\./,'');}catch(e){return url||'';}}
+function materialSourceLabel(item){if(item.url)return extractDomain(item.url);if(item.file_path)return basename(item.file_path);return item.tipo==='nota'?'appunto interno':'nessuna fonte esterna';}
+function encodeStoragePath(path){return String(path||'').split('/').map(encodeURIComponent).join('/');}
+function getMaterialOpenUrlSync(item){if(item.url)return normalizeUrl(item.url);if(item.file_path)return`${SUPA_URL}/storage/v1/object/public/materiali/${encodeStoragePath(item.file_path)}`;return'';}
 
 function openMaterialDetail(id){
   const item=getMaterialById(id);
@@ -1004,14 +1107,12 @@ function openMaterialDetail(id){
   const openUrl=getMaterialOpenUrlSync(item);
   const sourceLabel=materialSourceLabel(item);
   const nuclei=splitNuclei(item.nuclei);
-  const displayContent = materialDisplayContent(item);
-  const noteQuadernoId = extractQuadernoIdFromContent(item.contenuto);
-  const noteQuaderno = noteQuadernoId ? percorsi.find(p=>String(p.id)===String(noteQuadernoId)) : null;
-  const rel=materiali.filter(m => String(m.id)!==String(item.id) && nuclei.some(n => splitNuclei(m.nuclei).includes(n))).slice(0,4);
-  const sourceHtml = openUrl
-    ? `<a class="material-action-btn" href="${openUrl}" target="_blank" rel="noopener noreferrer">Apri fonte</a>`
-    : '';
-  document.getElementById('modal-root').innerHTML = `
+  const displayContent=materialDisplayContent(item);
+  const noteQuadernoId=extractQuadernoIdFromContent(item.contenuto);
+  const noteQuaderno=noteQuadernoId?percorsi.find(p=>String(p.id)===String(noteQuadernoId)):null;
+  const rel=materiali.filter(m=>String(m.id)!==String(item.id)&&nuclei.some(n=>splitNuclei(m.nuclei).includes(n))).slice(0,4);
+  const sourceHtml=openUrl?`<a class="material-action-btn" href="${openUrl}" target="_blank" rel="noopener noreferrer">Apri fonte</a>`:'';
+  document.getElementById('modal-root').innerHTML=`
     <div class="modal-backdrop" onclick="handleBackdropClick(event)">
       <div class="modal-box" style="max-width:760px;">
         <div style="display:flex;align-items:baseline;gap:0.75rem;margin-bottom:0.5rem;">
@@ -1023,13 +1124,13 @@ function openMaterialDetail(id){
         <div class="material-detail-grid">
           <div>
             <label class="form-label">Contenuto</label>
-            <div class="material-detail-box" style="min-height:140px; white-space:pre-wrap; line-height:1.7;">${displayContent ? displayContent.replace(/</g,'&lt;') : '<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessun testo salvato. Usa la fonte esterna per rileggere il materiale.</span>'}</div>
+            <div class="material-detail-box" style="min-height:140px;white-space:pre-wrap;line-height:1.7;">${displayContent?displayContent.replace(/</g,'&lt;'):'<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessun testo salvato.</span>'}</div>
           </div>
           <div>
             <label class="form-label">Nuclei</label>
-            <div class="material-detail-box">${nuclei.length ? nuclei.map(n => `<span class="archivio-source-chip" style="margin:0 0.4rem 0.4rem 0;display:inline-flex;">${n}</span>`).join('') : '<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessun nucleo associato.</span>'}</div>
+            <div class="material-detail-box">${nuclei.length?nuclei.map(n=>`<span class="archivio-source-chip" style="margin:0 0.4rem 0.4rem 0;display:inline-flex;">${n}</span>`).join(''):'<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessun nucleo associato.</span>'}</div>
             <label class="form-label" style="margin-top:1rem;">Fonte</label>
-            <div class="material-detail-box">${openUrl ? `<div style="font-size:13px;line-height:1.6;word-break:break-word;">${sourceLabel}</div>` : '<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessuna fonte esterna disponibile.</span>'}${noteQuaderno ? `<div class="const-micro" style="margin-top:0.6rem;">Questa nota appartiene al quaderno <strong>${noteQuaderno.titolo}</strong>.</div>` : ''}</div>
+            <div class="material-detail-box">${openUrl?`<div style="font-size:13px;line-height:1.6;word-break:break-word;">${sourceLabel}</div>`:'<span style="color:var(--color-text-tertiary);font-family:var(--font-sans);">Nessuna fonte esterna.</span>'}${noteQuaderno?`<div class="const-micro" style="margin-top:0.6rem;">Questa nota appartiene al quaderno <strong>${noteQuaderno.titolo}</strong>.</div>`:''}</div>
           </div>
         </div>
         <div class="material-action-row">
@@ -1040,57 +1141,61 @@ function openMaterialDetail(id){
           <div class="panel-label">Riferimenti rapidi</div>
           <div id="material-reference-box" class="const-micro" style="margin-bottom:1rem;">Sto cercando un riferimento collegato…</div>
           <div class="panel-label">Materiali correlati</div>
-          <div class="const-related-list">${rel.length ? rel.map(r => `<div class="const-related-item" onclick="openMaterialDetail(${r.id})"><div class="const-related-type">${r.tipo}</div><div class="const-related-title">${r.titolo}</div></div>`).join('') : '<div class="const-micro">Nessun materiale correlato ancora.</div>'}</div>
+          <div class="const-related-list">${rel.length?rel.map(r=>`<div class="const-related-item" onclick="openMaterialDetail(${r.id})"><div class="const-related-type">${r.tipo}</div><div class="const-related-title">${r.titolo}</div></div>`).join(''):'<div class="const-micro">Nessun materiale correlato ancora.</div>'}</div>
         </div>
       </div>
     </div>`;
   document.body.classList.add('modal-open');
+  renderReferenceBox(nuclei[0]||item.titolo,'material-reference-box');
 }
 
-function renderArchivio() {
+function renderArchivio(){
   const lista=filtroCorrente==='tutti'?materiali:materiali.filter(m=>m.tipo===filtroCorrente);
   document.getElementById('archivio-count').textContent=`${lista.length} materiali`;
-  if(piano()==='gratuito'){const perc=Math.min(100,Math.round((materiali.length/limiti().materiali)*100));document.getElementById('limite-archivio-bar').innerHTML=`<div class="limite-bar-wrap"><div class="limite-bar-label"><span>Archivio: ${materiali.length} / ${limiti().materiali}</span><span>${perc}%</span></div><div class="limite-bar"><div class="limite-bar-fill" style="width:${perc}%"></div></div></div>`;}
-  else{document.getElementById('limite-archivio-bar').innerHTML='';}
+  if(piano()==='gratuito'){
+    const perc=Math.min(100,Math.round((materiali.length/limiti().materiali)*100));
+    document.getElementById('limite-archivio-bar').innerHTML=`<div class="limite-bar-wrap"><div class="limite-bar-label"><span>Archivio: ${materiali.length} / ${limiti().materiali}</span><span>${perc}%</span></div><div class="limite-bar"><div class="limite-bar-fill" style="width:${perc}%"></div></div></div>`;
+  } else {document.getElementById('limite-archivio-bar').innerHTML='';}
 
-  document.getElementById('archivio-list').innerHTML = lista.length ? lista.map(m=>{
-    const nucleiList = splitNuclei(m.nuclei);
-    const nucleiHtml = nucleiList.length
-      ? nucleiList.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation(); openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join('')
-      : '<span>nuclei: —</span>';
+  if(lista.length===0){
+    document.getElementById('archivio-list').innerHTML=`
+      <div class="empty-state">
+        <div class="empty-state-icon">◦</div>
+        <div class="empty-state-title">La biblioteca è ancora vuota.</div>
+        <div class="empty-state-desc">Aggiungi il tuo primo materiale: una nota, una citazione, un link, un PDF. Ogni elemento può portare nuclei concettuali che alimenteranno l'Atlante.</div>
+        <button class="btn-primary" onclick="openModal('nota')">+ Aggiungi il primo materiale</button>
+      </div>`;
+    return;
+  }
 
+  document.getElementById('archivio-list').innerHTML=lista.map(m=>{
+    const nucleiList=splitNuclei(m.nuclei);
+    const nucleiHtml=nucleiList.length?nucleiList.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation();openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join(''):'<span>nuclei: —</span>';
     return `<div class="archivio-item" onclick="openMaterialDetail(${m.id})">
       <span class="archivio-type">${m.tipo}</span>
       <div class="archivio-main">
         <div class="archivio-top">
           <span class="archivio-title">${m.titolo}</span>
-          <a class="archivio-open-hint" href="${getMaterialOpenUrlSync(m) || '#'}" target="_blank" rel="noopener noreferrer" onclick="if(!this.href || this.href.endsWith('#')){event.preventDefault(); openMaterialDetail(${m.id});} event.stopPropagation();">apri ↗</a>
+          <a class="archivio-open-hint" href="${getMaterialOpenUrlSync(m)||'#'}" target="_blank" rel="noopener noreferrer" onclick="if(!this.href||this.href.endsWith('#')){event.preventDefault();openMaterialDetail(${m.id});}event.stopPropagation();">apri ↗</a>
         </div>
         <div class="archivio-source">
-          <a class="archivio-source-chip" href="${getMaterialOpenUrlSync(m) || '#'}" target="_blank" rel="noopener noreferrer" onclick="if(!this.href || this.href.endsWith('#')){event.preventDefault(); openMaterialDetail(${m.id});} event.stopPropagation();">fonte: ${materialSourceLabel(m)}</a>
+          <a class="archivio-source-chip" href="${getMaterialOpenUrlSync(m)||'#'}" target="_blank" rel="noopener noreferrer" onclick="if(!this.href||this.href.endsWith('#')){event.preventDefault();openMaterialDetail(${m.id});}event.stopPropagation();">fonte: ${materialSourceLabel(m)}</a>
           <span class="archivio-nuclei-wrap">${nucleiHtml}</span>
         </div>
       </div>
     </div>`;
-  }).join('') : '<p style="color:var(--color-text-tertiary);font-size:13px;padding:1rem 0;font-family:var(--font-sans);">Nessun materiale in questa categoria.</p>';
+  }).join('');
 }
 
 function openNucleus(nucleus){
-  selectedConstellation = (nucleus || '').toLowerCase().trim();
+  selectedConstellation=(nucleus||'').toLowerCase().trim();
   navigate('costellazioni');
-  const graph = buildDynamicConstellation();
-  if(graph.nodes.some(n=>n.id===selectedConstellation)){
-    renderCostellazioni();
-  }
-  const stage = document.getElementById('screen-costellazioni');
-  if(stage) stage.scrollIntoView({behavior:'smooth', block:'start'});
 }
 function filtraArchivio(f,el){filtroCorrente=f;document.querySelectorAll('.filtri .filtro').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderArchivio();}
-
 function aggiornaTipoForm(){const t=document.getElementById('nota-tipo').value;document.getElementById('nota-testo-wrap').style.display=(t==='link'||t==='pdf'||t==='immagine')?'none':'block';document.getElementById('nota-url-wrap').style.display=t==='link'?'block':'none';document.getElementById('nota-file-wrap').style.display=(t==='pdf'||t==='immagine')?'block':'none';}
 function fileSelezionato(input){document.getElementById('upload-label').textContent=input.files[0]?input.files[0].name:'Clicca per scegliere un file';}
 
-async function salvaNota() {
+async function salvaNota(){
   const titolo=document.getElementById('nota-titolo').value.trim();
   if(!titolo){document.getElementById('nota-msg').textContent='Inserisci un titolo.';return;}
   if(materiali.length>=limiti().materiali){mostraPaywall('Hai raggiunto i confini del tuo archivio libero.');return;}
@@ -1104,64 +1209,65 @@ async function salvaNota() {
     if(fi.files[0]){
       const f=fi.files[0];
       const path=`${user.id}/${Date.now()}_${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-      const{error:ue}=await db.storage.from('materiali').upload(path,f);
+      const {error:ue}=await db.storage.from('materiali').upload(path,f);
       if(ue){document.getElementById('nota-msg').textContent='Errore upload: '+ue.message;btn.disabled=false;btn.textContent='Aggiungi';return;}
       file_path=path;
     }
   }
-  if(tipo==='link')url=document.getElementById('nota-url').value.trim();
+  if(tipo==='link') url=document.getElementById('nota-url').value.trim();
   let contenuto=document.getElementById('nota-contenuto')?.value||'';
-  if(quadernoId){
-    contenuto=`[[Q:${quadernoId}]]
-${contenuto}`;
-  }
-  const{error}=await db.from('materiali').insert({user_id:user.id,tipo,titolo,contenuto,nuclei:document.getElementById('nota-nuclei').value||'',url,file_path});
+  if(quadernoId) contenuto=`[[Q:${quadernoId}]]\n${contenuto}`;
+  const {error}=await db.from('materiali').insert({user_id:user.id,tipo,titolo,contenuto,nuclei:document.getElementById('nota-nuclei').value||'',url,file_path});
   if(error){document.getElementById('nota-msg').textContent='Errore: '+error.message;btn.disabled=false;btn.textContent='Aggiungi';return;}
   await caricaMateriali();renderArchivio();renderPercorsi();renderCostellazioni();closeModal();
 }
 
 // ── PERCORSI ──────────────────────────────────────────
-async function caricaPercorsi(){const{data}=await db.from('percorsi').select('*').eq('user_id',user.id).order('created_at',{ascending:false});percorsi=data||[];}
-
+async function caricaPercorsi(){const {data}=await db.from('percorsi').select('*').eq('user_id',user.id).order('created_at',{ascending:false});percorsi=data||[];}
 
 function relatedMaterialsForQuaderno(q){
-  const qWords = splitNuclei((q.titolo||'') + ' · ' + (q.descrizione||''));
+  const qWords=splitNuclei((q.titolo||'')+' · '+(q.descrizione||''));
   return materiali.filter(m=>{
-    const explicit = String(quadernoIdForMaterial(m)) === String(q.id);
-    const mn = splitNuclei(m.nuclei);
-    const inferred = mn.some(n=>qWords.includes(n)) || qWords.some(n=>(m.titolo||'').toLowerCase().includes(n));
-    return explicit || inferred;
+    const explicit=String(quadernoIdForMaterial(m))===String(q.id);
+    const mn=splitNuclei(m.nuclei);
+    const inferred=mn.some(n=>qWords.includes(n))||qWords.some(n=>(m.titolo||'').toLowerCase().includes(n));
+    return explicit||inferred;
   });
 }
 function quadernoNuclei(q){
-  const mats = relatedMaterialsForQuaderno(q);
+  const mats=relatedMaterialsForQuaderno(q);
   const counts={};
   mats.forEach(m=>splitNuclei(m.nuclei).forEach(n=>counts[n]=(counts[n]||0)+1));
   return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);
 }
+function quadernoIdForMaterial(item){const content=item?.contenuto||'';const m=content.match(/\[\[Q:([^\]]*)\]\]/);return m?m[1]:'';}
+function relatedSourcesCount(q){return relatedMaterialsForQuaderno(q).filter(m=>!!(m.url||m.file_path)).length;}
 
-function quadernoIdForMaterial(item){
-  const content = item?.contenuto || '';
-  const m = content.match(/\[\[Q:([^\]]*)\]\]/);
-  return m ? m[1] : '';
-}
-
-function relatedSourcesCount(q){
-  return relatedMaterialsForQuaderno(q).filter(m=>!!(m.url || m.file_path)).length;
-}
 function renderPercorsi(){
   document.getElementById('percorsi-count').textContent=`${percorsi.length} quaderni attivi`;
-  document.getElementById('percorsi-list').innerHTML = percorsi.length ? percorsi.map(p=>{
-    const mats = relatedMaterialsForQuaderno(p);
-    const nuclei = quadernoNuclei(p);
-    const sources = relatedSourcesCount(p);
-    const notes = notesForQuaderno(p.id);
+
+  if(percorsi.length===0){
+    document.getElementById('percorsi-list').innerHTML=`
+      <div class="empty-state">
+        <div class="empty-state-icon">◦</div>
+        <div class="empty-state-title">Nessun quaderno ancora.</div>
+        <div class="empty-state-desc">Un quaderno è un progetto di ricerca vivo. Può iniziare da un'intuizione vaga — non serve sapere dove andrà. Dagli un nome e comincia ad accumulare.</div>
+        <button class="btn-primary" onclick="openModal('percorso')">+ Crea il primo quaderno</button>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('percorsi-list').innerHTML=percorsi.map(p=>{
+    const mats=relatedMaterialsForQuaderno(p);
+    const nuclei=quadernoNuclei(p);
+    const sources=relatedSourcesCount(p);
+    const notes=notesForQuaderno(p.id);
     return `<div class="percorso-card" data-qid="${p.id}" onclick="openQuadernoDetail(${p.id})" style="cursor:pointer;">
       <div class="percorso-header">
         <div class="percorso-title">${p.titolo}</div>
         <div class="fase-badge fase-${p.fase}">${p.fase}</div>
       </div>
-      <div class="percorso-desc">${p.descrizione || 'Quaderno in formazione.'}</div>
+      <div class="percorso-desc">${p.descrizione||'Quaderno in formazione.'}</div>
       <div class="maturazione-bar"><div class="maturazione-fill" style="width:${p.maturazione||0}%"></div></div>
       <div class="percorso-meta">
         <span>${p.maturazione||0}% maturazione</span>
@@ -1173,7 +1279,7 @@ function renderPercorsi(){
         <div class="quaderno-panel">
           <div class="panel-label">Nuclei del quaderno</div>
           <div class="quaderno-chip-row">
-            ${nuclei.length ? nuclei.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation(); openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join('') : '<span class="const-micro">Nessun nucleo ancora.</span>'}
+            ${nuclei.length?nuclei.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation();openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join(''):'<span class="const-micro">Nessun nucleo ancora.</span>'}
           </div>
         </div>
         <div class="quaderno-panel">
@@ -1182,38 +1288,39 @@ function renderPercorsi(){
         </div>
       </div>
       <div style="margin-top:1rem;text-align:right;">
-        <button type="button" class="material-action-btn quaderno-open-btn" data-qid="${p.id}" onclick="event.stopPropagation(); openQuadernoDetail(${p.id})">Apri quaderno</button>
+        <button type="button" class="material-action-btn quaderno-open-btn" data-qid="${p.id}" onclick="event.stopPropagation();openQuadernoDetail(${p.id})">Apri quaderno</button>
       </div>
     </div>`;
-  }).join('') : '<p style="color:var(--color-text-tertiary);font-size:13px;font-family:var(--font-sans);">Nessun quaderno ancora.</p>';
+  }).join('');
 }
+
 function openQuadernoDetail(id){
   try{
-    const q = percorsi.find(p=>String(p.id)===String(id));
+    const q=percorsi.find(p=>String(p.id)===String(id));
     if(!q) return;
-    const mats = relatedMaterialsForQuaderno(q).slice(0,6);
-    const nuclei = quadernoNuclei(q);
-    const notes = notesForQuaderno(q.id);
-    const graphNodes = nuclei.map((n,idx)=>({n, x:[120,260,200,340,70,310][idx]||120+idx*40, y:[90,80,180,170,210,260][idx]||100+idx*30}));
-    document.getElementById('modal-root').innerHTML = `
+    const mats=relatedMaterialsForQuaderno(q).slice(0,6);
+    const nuclei=quadernoNuclei(q);
+    const notes=notesForQuaderno(q.id);
+    const graphNodes=nuclei.map((n,idx)=>({n,x:[120,260,200,340,70,310][idx]||120+idx*40,y:[90,80,180,170,210,260][idx]||100+idx*30}));
+    document.getElementById('modal-root').innerHTML=`
       <div class="modal-backdrop" onclick="handleBackdropClick(event)">
         <div class="modal-box" style="max-width:880px;">
           <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
             <div>
               <div class="const-kicker">Quaderno</div>
               <h2 style="font-size:28px;font-weight:400;margin-bottom:0.35rem;">${q.titolo}</h2>
-              <div class="modal-sub" style="margin-bottom:0.8rem;">${q.descrizione || 'Quaderno in formazione.'}</div>
+              <div class="modal-sub" style="margin-bottom:0.8rem;">${q.descrizione||'Quaderno in formazione.'}</div>
             </div>
             <div style="display:flex;gap:0.6rem;align-items:center;">
               <div class="fase-badge fase-${q.fase}">${q.fase}</div>
-              <button class="material-action-btn" onclick="event.stopPropagation(); openEditQuadernoModal(${q.id})">Modifica quaderno</button>
+              <button class="material-action-btn" onclick="event.stopPropagation();openEditQuadernoModal(${q.id})">Modifica quaderno</button>
             </div>
           </div>
           <div class="quaderno-microgrid">
             <div class="quaderno-panel">
               <div class="panel-label">Nuclei emersi</div>
               <div class="quaderno-chip-row">
-                ${nuclei.length ? nuclei.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation(); closeModal(); openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join('') : '<span class="const-micro">Nessun nucleo ancora.</span>'}
+                ${nuclei.length?nuclei.map(n=>`<button class="archivio-nucleus-chip" onclick="event.stopPropagation();closeModal();openNucleus('${escapeSingleQuotes(n)}')">${n}</button>`).join(''):'<span class="const-micro">Nessun nucleo ancora.</span>'}
               </div>
             </div>
             <div class="quaderno-panel">
@@ -1225,52 +1332,53 @@ function openQuadernoDetail(id){
             <div class="quaderno-panel">
               <div class="panel-label">Materiali collegati</div>
               <div class="const-related-list">
-                ${mats.length ? mats.map(m=>`<div class="const-related-item" onclick="event.stopPropagation(); openMaterialDetail(${m.id})"><div class="const-related-type">${m.tipo}</div><div class="const-related-title">${m.titolo}</div></div>`).join('') : '<div class="const-micro">Ancora nessun materiale chiaramente associato.</div>'}
+                ${mats.length?mats.map(m=>`<div class="const-related-item" onclick="event.stopPropagation();openMaterialDetail(${m.id})"><div class="const-related-type">${m.tipo}</div><div class="const-related-title">${m.titolo}</div></div>`).join(''):'<div class="const-micro">Ancora nessun materiale chiaramente associato.</div>'}
               </div>
             </div>
             <div class="quaderno-panel">
               <div class="panel-label">Atlante del quaderno</div>
-              ${graphNodes.length ? `<svg viewBox="0 0 380 280" width="100%" style="display:block;height:220px;">
+              ${graphNodes.length?`<svg viewBox="0 0 380 280" width="100%" style="display:block;height:220px;">
                 ${graphNodes.map((a,i)=>graphNodes.slice(i+1).map(b=>`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="var(--color-border-tertiary)" stroke-width="0.8"></line>`).join('')).join('')}
-                ${graphNodes.map((g,i)=>`<g onclick="event.stopPropagation(); closeModal(); openNucleus('${escapeSingleQuotes(g.n)}')" style="cursor:pointer">
-                  <circle cx="${g.x}" cy="${g.y}" r="${16 + Math.max(0, 10-i*1.2)}" fill="rgba(255,255,255,0.86)" stroke="#7D6A58"></circle>
+                ${graphNodes.map((g,i)=>`<g onclick="event.stopPropagation();closeModal();openNucleus('${escapeSingleQuotes(g.n)}')" style="cursor:pointer">
+                  <circle cx="${g.x}" cy="${g.y}" r="${16+Math.max(0,10-i*1.2)}" fill="rgba(255,255,255,0.86)" stroke="#7D6A58"></circle>
                   <text x="${g.x}" y="${g.y+4}" text-anchor="middle" font-size="11" fill="var(--color-text-primary)" font-family="Georgia,serif">${g.n}</text>
                 </g>`).join('')}
-              </svg>` : '<div class="const-micro">La mappa del quaderno emergerà quando i nuclei diventeranno più chiari.</div>'}
+              </svg>`:'<div class="const-micro">La mappa del quaderno emergerà quando i nuclei diventeranno più chiari.</div>'}
             </div>
           </div>
           <div class="quaderno-panel" style="margin-top:1rem;">
             <div class="panel-label">Note del quaderno</div>
             <div class="const-related-list">
-              ${notes.length ? notes.map(n=>`<div class="const-related-item" onclick="event.stopPropagation(); openMaterialDetail(${n.id})"><div class="const-related-type">nota</div><div class="const-related-title">${n.titolo}</div></div>`).join('') : '<div class="const-micro">Nessuna nota ancora. Apri la modalità scrittura per iniziare.</div>'}
+              ${notes.length?notes.map(n=>`<div class="const-related-item" onclick="event.stopPropagation();openMaterialDetail(${n.id})"><div class="const-related-type">nota</div><div class="const-related-title">${n.titolo}</div></div>`).join(''):'<div class="const-micro">Nessuna nota ancora. Apri la modalità scrittura per iniziare.</div>'}
             </div>
           </div>
           <div class="material-action-row">
-            <button class="material-action-btn" onclick="navigate('scrittura'); setTimeout(()=>{ const s=document.getElementById('note-quaderno-select'); if(s) s.value='${q.id}'; }, 50); closeModal();">Apri in scrittura</button>
+            <button class="material-action-btn" onclick="navigate('scrittura');setTimeout(()=>{const s=document.getElementById('note-quaderno-select');if(s)s.value='${q.id}';},50);closeModal();">Apri in scrittura</button>
             <button class="material-action-btn" onclick="closeModal()">Chiudi</button>
           </div>
         </div>
       </div>`;
     document.body.classList.add('modal-open');
-    if(typeof renderReferenceBox === 'function') renderReferenceBox(nuclei[0] || q.titolo, 'quaderno-reference-preview');
+    if(typeof renderReferenceBox==='function') renderReferenceBox(nuclei[0]||q.titolo,'quaderno-reference-preview');
   }catch(err){
-    console.error('Errore apertura quaderno', err);
-    document.getElementById('modal-root').innerHTML = `<div class="modal-backdrop" onclick="handleBackdropClick(event)"><div class="modal-box"><h2>Quaderno</h2><div class="modal-sub">Si è verificato un problema nel rendering completo. Sto aprendo una vista essenziale.</div><div class="const-related-list">${(notesForQuaderno(id)||[]).slice(0,5).map(n=>`<div class="const-related-item" onclick="openMaterialDetail(${n.id})"><div class="const-related-type">nota</div><div class="const-related-title">${n.titolo}</div></div>`).join('') || '<div class="const-micro">Nessuna nota ancora.</div>'}</div><div class="material-action-row"><button class="material-action-btn" onclick="closeModal()">Chiudi</button></div></div></div>`; document.body.classList.add('modal-open');
+    console.error('Errore apertura quaderno',err);
+    document.getElementById('modal-root').innerHTML=`<div class="modal-backdrop" onclick="handleBackdropClick(event)"><div class="modal-box"><h2>Quaderno</h2><div class="modal-sub">Si è verificato un problema nel rendering.</div><div class="material-action-row"><button class="material-action-btn" onclick="closeModal()">Chiudi</button></div></div></div>`;
+    document.body.classList.add('modal-open');
   }
 }
 
 function openEditQuadernoModal(id){
-  const q = percorsi.find(p=>String(p.id)===String(id));
+  const q=percorsi.find(p=>String(p.id)===String(id));
   if(!q) return;
-  document.getElementById('modal-root').innerHTML = `
+  document.getElementById('modal-root').innerHTML=`
     <div class="modal-backdrop" onclick="handleBackdropClick(event)">
       <div class="modal-box">
         <h2>Modifica quaderno</h2>
         <div class="modal-sub">Aggiorna identità e direzione di questo quaderno.</div>
         <label class="form-label">Titolo</label>
-        <input class="form-input" id="edit-q-title" value="${q.titolo || ''}"/>
+        <input class="form-input" id="edit-q-title" value="${q.titolo||''}"/>
         <label class="form-label">Descrizione</label>
-        <textarea class="form-textarea" id="edit-q-desc">${q.descrizione || ''}</textarea>
+        <textarea class="form-textarea" id="edit-q-desc">${q.descrizione||''}</textarea>
         <label class="form-label">Fase</label>
         <select class="form-select" id="edit-q-fase">
           <option value="intuizione" ${q.fase==='intuizione'?'selected':''}>Intuizione</option>
@@ -1288,41 +1396,37 @@ function openEditQuadernoModal(id){
     </div>`;
   document.body.classList.add('modal-open');
 }
+
 async function saveQuadernoUpdate(id){
-  const titolo = document.getElementById('edit-q-title').value.trim();
-  if(!titolo){ document.getElementById('edit-q-msg').textContent='Inserisci un titolo.'; return; }
-  const payload = {
-    titolo,
-    descrizione: document.getElementById('edit-q-desc').value,
-    fase: document.getElementById('edit-q-fase').value
-  };
-  const {error} = await db.from('percorsi').update(payload).eq('id', id);
-  if(error){ document.getElementById('edit-q-msg').textContent='Errore: ' + error.message; return; }
-  await caricaPercorsi();
-  renderPercorsi();
-  openQuadernoDetail(id);
+  const titolo=document.getElementById('edit-q-title').value.trim();
+  if(!titolo){document.getElementById('edit-q-msg').textContent='Inserisci un titolo.';return;}
+  const payload={titolo,descrizione:document.getElementById('edit-q-desc').value,fase:document.getElementById('edit-q-fase').value};
+  const {error}=await db.from('percorsi').update(payload).eq('id',id);
+  if(error){document.getElementById('edit-q-msg').textContent='Errore: '+error.message;return;}
+  await caricaPercorsi();renderPercorsi();openQuadernoDetail(id);
 }
+
 async function salvaPercorso(){
   const titolo=document.getElementById('percorso-titolo').value.trim();
   if(!titolo){document.getElementById('percorso-msg').textContent='Inserisci un titolo.';return;}
-  const{error}=await db.from('percorsi').insert({user_id:user.id,titolo,descrizione:document.getElementById('percorso-desc').value,fase:document.getElementById('percorso-fase').value,maturazione:0,domande:[]});
+  const {error}=await db.from('percorsi').insert({user_id:user.id,titolo,descrizione:document.getElementById('percorso-desc').value,fase:document.getElementById('percorso-fase').value,maturazione:0,domande:[]});
   if(error){document.getElementById('percorso-msg').textContent='Errore: '+error.message;return;}
   await caricaPercorsi();renderPercorsi();closeModal();
 }
 
 // ── SCRITTURA ─────────────────────────────────────────
-async function caricaBozza(){const{data}=await db.from('bozze').select('*').eq('user_id',user.id).order('updated_at',{ascending:false}).limit(1).maybeSingle();if(data)bozza={id:data.id,titolo:data.titolo||'',testo:data.testo||''};}
+async function caricaBozza(){const {data}=await db.from('bozze').select('*').eq('user_id',user.id).order('updated_at',{ascending:false}).limit(1).maybeSingle();if(data)bozza={id:data.id,titolo:data.titolo||'',testo:data.testo||''};}
 
 function renderScrittura(){
   document.getElementById('editor-title').value=bozza.titolo||'';
   document.getElementById('editor-body').value=bozza.testo||'';
-  if(piano()==='gratuito'){const rim=aiRimaste(),used=limiti().ai_mese-rim,perc=Math.round((used/limiti().ai_mese)*100);document.getElementById('ai-limite-banner').innerHTML=`<div class="limite-bar-wrap" style="margin-bottom:1rem;"><div class="limite-bar-label"><span>Richieste AI: ${used} / ${limiti().ai_mese}</span><span>${rim} rimaste</span></div><div class="limite-bar"><div class="limite-bar-fill" style="width:${perc}%"></div></div></div>`;}
-  else{document.getElementById('ai-limite-banner').innerHTML='';}
+  if(piano()==='gratuito'){
+    const rim=aiRimaste(),used=limiti().ai_mese-rim,perc=Math.round((used/limiti().ai_mese)*100);
+    document.getElementById('ai-limite-banner').innerHTML=`<div class="limite-bar-wrap" style="margin-bottom:1rem;"><div class="limite-bar-label"><span>Richieste AI: ${used} / ${limiti().ai_mese}</span><span>${rim} rimaste</span></div><div class="limite-bar"><div class="limite-bar-fill" style="width:${perc}%"></div></div></div>`;
+  } else {document.getElementById('ai-limite-banner').innerHTML='';}
   document.getElementById('scrittura-materiali').innerHTML=materiali.slice(0,4).map(m=>`<div class="panel-row">${m.titolo}</div>`).join('')||'<div class="panel-row" style="color:var(--color-text-tertiary);">Nessun materiale.</div>';
-  const sel = document.getElementById('note-quaderno-select');
-  if(sel){
-    sel.innerHTML = percorsi.length ? percorsi.map(p=>`<option value="${p.id}">${p.titolo}</option>`).join('') : '<option value="">Nessun quaderno</option>';
-  }
+  const sel=document.getElementById('note-quaderno-select');
+  if(sel){sel.innerHTML=percorsi.length?percorsi.map(p=>`<option value="${p.id}">${p.titolo}</option>`).join(''):'<option value="">Nessun quaderno</option>';}
 }
 
 async function autoSave(){
@@ -1332,35 +1436,27 @@ async function autoSave(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
     if(bozza.id){await db.from('bozze').update({titolo:bozza.titolo,testo:bozza.testo,updated_at:new Date().toISOString()}).eq('id',bozza.id);}
-    else{const{data}=await db.from('bozze').insert({user_id:user.id,titolo:bozza.titolo,testo:bozza.testo}).select().single();if(data)bozza.id=data.id;}
+    else{const {data}=await db.from('bozze').insert({user_id:user.id,titolo:bozza.titolo,testo:bozza.testo}).select().single();if(data)bozza.id=data.id;}
     document.getElementById('save-indicator').textContent='Salvato ✓';
   },1000);
 }
 
-
 async function saveCurrentAsNote(){
-  const titolo = document.getElementById('editor-title').value.trim();
-  const body = document.getElementById('editor-body').value.trim();
-  const nuclei = document.getElementById('note-nuclei-input').value.trim();
-  const quadernoId = document.getElementById('note-quaderno-select').value;
-  const msg = document.getElementById('note-save-msg');
-  if(!titolo){ msg.textContent = 'Dai un titolo alla nota.'; return; }
-  if(!body){ msg.textContent = 'Scrivi qualcosa prima di salvare la nota.'; return; }
-  if(!quadernoId){ msg.textContent = 'Scegli un quaderno.'; return; }
-  const payload = {
-    user_id: user.id,
-    tipo: 'nota',
-    titolo,
-    contenuto: buildNoteContent(body, quadernoId),
-    nuclei
-  };
-  const {error} = await db.from('materiali').insert(payload);
-  if(error){ msg.textContent = 'Errore: ' + error.message; return; }
-  await caricaMateriali();
-  renderArchivio();
-  renderPercorsi();
-  msg.textContent = '✓ Nota salvata. Ora fa parte della Biblioteca e del quaderno scelto.';
+  const titolo=document.getElementById('editor-title').value.trim();
+  const body=document.getElementById('editor-body').value.trim();
+  const nuclei=document.getElementById('note-nuclei-input').value.trim();
+  const quadernoId=document.getElementById('note-quaderno-select').value;
+  const msg=document.getElementById('note-save-msg');
+  if(!titolo){msg.textContent='Dai un titolo alla nota.';return;}
+  if(!body){msg.textContent='Scrivi qualcosa prima di salvare la nota.';return;}
+  if(!quadernoId){msg.textContent='Scegli un quaderno.';return;}
+  const payload={user_id:user.id,tipo:'nota',titolo,contenuto:buildNoteContent(body,quadernoId),nuclei};
+  const {error}=await db.from('materiali').insert(payload);
+  if(error){msg.textContent='Errore: '+error.message;return;}
+  await caricaMateriali();renderArchivio();renderPercorsi();
+  msg.textContent='✓ Nota salvata. Ora fa parte della Biblioteca e del quaderno scelto.';
 }
+
 async function chiediAlCompagno(){
   const testo=document.getElementById('editor-body').value.trim();
   const el=document.getElementById('scrittura-suggerimento');
@@ -1369,8 +1465,10 @@ async function chiediAlCompagno(){
   if(!key){el.textContent='Salva la tua API key in ⚙ Impostazioni per attivare il compagno.';return;}
   if(aiRimaste()<=0){mostraPaywall('Hai esaurito le richieste AI di questo mese.');return;}
   el.textContent='Il compagno sta leggendo…';
-  try{const ris=await callAI(key,`Sei il compagno Krill Studium, postura ${postura}. Leggi questo brano e dai UN suggerimento (2-3 frasi), colto e sobrio. In italiano. Solo il suggerimento.\n\n${testo.slice(0,1200)}`);el.textContent=ris;await incrementaAi();renderScrittura();}
-  catch(e){el.textContent='Errore di connessione. Verifica la tua API key in Impostazioni.';}
+  try{
+    const ris=await callAI(key,`Sei il compagno Krill Studium, postura ${postura}. Leggi questo brano e dai UN suggerimento (2-3 frasi), colto e sobrio. In italiano. Solo il suggerimento.\n\n${testo.slice(0,1200)}`);
+    el.textContent=ris;await incrementaAi();renderScrittura();
+  }catch(e){el.textContent='Errore di connessione. Verifica la tua API key in Impostazioni.';}
 }
 
 function fmt(a,b){const ta=document.getElementById('editor-body');const s=ta.selectionStart,e=ta.selectionEnd;const sel=ta.value.substring(s,e);if(!sel)return;ta.setRangeText(a+sel+b,s,e,'select');autoSave();}
@@ -1385,30 +1483,13 @@ function setPostura(name,el){
   renderCostellazioni();
 }
 
-// ── IMPOSTAZIONI ──────────────────────────────────────
-function salvaImpostazioni(){
-  const k=document.getElementById('imp-apikey').value.trim();
-  if(!k){document.getElementById('imp-msg').textContent='Incolla la tua API key.';return;}
-  if(!k.startsWith('sk-ant-')){document.getElementById('imp-msg').textContent='La key deve iniziare con sk-ant-…';return;}
-  localStorage.setItem('krill_anthropic_key',k);
-  document.getElementById('imp-msg').textContent='✓ Salvata. Il compagno è attivo.';
-  setTimeout(closeModal,1200);
-}
-
-
-document.addEventListener('click', function(ev){
-  const btn = ev.target.closest('.quaderno-open-btn');
-  if(btn){
-    ev.preventDefault();
-    ev.stopPropagation();
-    const qid = btn.getAttribute('data-qid');
-    if(qid) openQuadernoDetail(qid);
-    return;
-  }
-  const card = ev.target.closest('.percorso-card[data-qid]');
-  if(card && !ev.target.closest('.archivio-nucleus-chip') && !ev.target.closest('.material-action-btn')){
-    const qid = card.getAttribute('data-qid');
-    if(qid) openQuadernoDetail(qid);
+// ── CLICK DELEGATION ──────────────────────────────────
+document.addEventListener('click',function(ev){
+  const btn=ev.target.closest('.quaderno-open-btn');
+  if(btn){ev.preventDefault();ev.stopPropagation();const qid=btn.getAttribute('data-qid');if(qid)openQuadernoDetail(qid);return;}
+  const card=ev.target.closest('.percorso-card[data-qid]');
+  if(card&&!ev.target.closest('.archivio-nucleus-chip')&&!ev.target.closest('.material-action-btn')){
+    const qid=card.getAttribute('data-qid');if(qid)openQuadernoDetail(qid);
   }
 });
 
@@ -1416,3 +1497,4 @@ document.addEventListener('click', function(ev){
 db.auth.getSession().then(({data})=>{if(data.session?.user)initApp(data.session.user);});
 db.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){document.getElementById('app-screen').classList.add('hidden');document.getElementById('auth-screen').classList.remove('hidden');}});
 </script>
+</html>
