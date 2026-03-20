@@ -478,7 +478,7 @@ const {createClient}=supabase;
 const db=createClient(SUPA_URL,SUPA_KEY);
 
 const LIMITI={gratuito:{materiali:20,ai_mese:15,posture:['Cartografo','Custode','Compagno di bottega']},krill:{materiali:Infinity,ai_mese:150,posture:['Cartografo','Editor','Critico','Custode','Compagno di bottega','Provocatore']}};
-const TUTTE_POSTURE=[{id:'Cartografo',desc:'Evidenzia strutture, convergenze, assi.'},{id:'Editor',desc:'Segnala ridondanze, gerarchia, forma.'},{id:'Critico',desc:'Problematizza, distingue, mette in dubbio.'},{id:'Custode',desc:'Ricorda, riattiva, protegge la coerenza.'},{id:'Compagno di bottega',desc:'Tono caldo e non giudicante.'},{id:'Provocatore',desc:'Sposta l\'asse. Propone ipotesi inattese.'}];
+const TUTTE_POSTURE=[{id:'Cartografo',desc:'Evidenzia strutture, convergenze, assi.'},{id:'Editor',desc:'Segnala ridondanze, gerarchia, forma.'},{id:'Critico',desc:'Problematizza, distingue, mette in dubbio.'},{id:'Custode',desc:'Ricorda, riattiva, protegge la coerenza.'},{id:'Compagno di bottega',desc:'Tono caldo e non giudicante.'},{id:'Provocatore',desc:"Sposta l'asse. Propone ipotesi inattese."}];
 const FALLBACK={'Cartografo':'I materiali che stai raccogliendo tracciano una mappa ancora parziale. Vale la pena chiedersi quali territori mancano.','Editor':'La forma è ancora implicita. Prima di aggiungere altro, guarda cosa hai già.','Critico':'Ogni ipotesi ha bisogno di resistenza. Cosa metti davvero in dubbio in questa ricerca?','Custode':'Non dimenticare da dove sei partita. Il filo esiste — a volte va solo ritrovato.','Compagno di bottega':'Stai lavorando. È già qualcosa. Continua, senza fretta.','Provocatore':'E se il punto di partenza fosse sbagliato? Vale la pena chiederlo almeno una volta.'};
 
 // Messaggi di benvenuto per utente nuovo — scritti a mano, tono Krill
@@ -590,12 +590,12 @@ function closeOnboarding() {
 // ── COSTELLAZIONI ─────────────────────────────────────
 const FALLBACK_CONSTELLATION = {
   nodes: [
-    { id:'assenza', count:3, color:'#7D6A58', desc:'Nodo centrale della costellazione: attira immagini, soglie e figure della perdita.' },
-    { id:'soglia', count:2, color:'#5E7A72', desc:'Qui la ricerca si piega verso il passaggio, il bordo, l'attraversamento non compiuto.' },
-    { id:'memoria', count:2, color:'#7B6280', desc:'Il polo che tiene insieme ritorni, tracce, ciò che insiste senza manifestarsi del tutto.' },
-    { id:'immagine', count:2, color:'#6F7B9A', desc:'Le immagini qui non illustrano: condensano tensioni e ritardi.' },
-    { id:'vuoto', count:2, color:'#8B7355', desc:'Il vuoto come forma attiva, come spazio in attesa di articolazione.' },
-    { id:'perdita', count:1, color:'#A2866B', desc:'Una verticalità più sottile: ciò che manca plasma il campo.' }
+    { id:'assenza', count:3, color:'#7D6A58', desc:"Nodo centrale della costellazione: attira immagini, soglie e figure della perdita." },
+    { id:'soglia', count:2, color:'#5E7A72', desc:"Qui la ricerca si piega verso il passaggio, il bordo, l'attraversamento non compiuto." },
+    { id:'memoria', count:2, color:'#7B6280', desc:"Il polo che tiene insieme ritorni, tracce, ciò che insiste senza manifestarsi del tutto." },
+    { id:'immagine', count:2, color:'#6F7B9A', desc:"Le immagini qui non illustrano: condensano tensioni e ritardi." },
+    { id:'vuoto', count:2, color:'#8B7355', desc:"Il vuoto come forma attiva, come spazio in attesa di articolazione." },
+    { id:'perdita', count:1, color:'#A2866B', desc:"Una verticalità più sottile: ciò che manca plasma il campo." }
   ],
   links: [['assenza','soglia'],['assenza','memoria'],['assenza','immagine'],['assenza','vuoto'],['assenza','perdita'],['memoria','immagine']]
 };
@@ -760,7 +760,7 @@ function costellazioneCommento(node){
     Editor:`Il nodo "${node.id}" ha abbastanza peso da chiedere una sezione autonoma o un sottoparagrafo dedicato.`,
     Critico:`Forse stai usando "${node.id}" come parola ombrello. Vale la pena distinguerne meglio le accezioni.`,
     Custode:`${capitalize(node.id)} ritorna senza clamore. È uno di quei nuclei che tengono insieme il resto.`,
-    'Compagno di bottega':`Qui c'è qualcosa che continua a bussare. ${capitalize(node.id)} non va forzato: va ascoltato ancora un poco.`,
+    'Compagno di bottega':`Qui c\'è qualcosa che continua a bussare. ${capitalize(node.id)} non va forzato: va ascoltato ancora un poco.`,
     Provocatore:`E se "${node.id}" non fosse un tema secondario ma il vero centro nascosto della tua ricerca?`
   };
   return comments[postura]||comments['Cartografo'];
